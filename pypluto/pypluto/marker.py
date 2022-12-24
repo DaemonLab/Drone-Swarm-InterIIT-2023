@@ -86,11 +86,10 @@ class Aruco:
                 bottomLeft = np.array([int(bottomLeft[0]), int(bottomLeft[1])])
                 topLeft = np.array([int(topLeft[0]), int(topLeft[1])])
 
-                cX,cY = int((topRight + bottomLeft)/2)
-                hX,hY = int((topLeft+topRight)/2)
-                yaw = 1
-
-
+                cX, cY = int((topRight + bottomLeft)/2)
+                hX, hY = int((topLeft+topRight)/2)
+                tX, tY = hX-cX, hY-cY
+                yaw = np.arctan2(tY, tX)
                 pose = np.array([cX,cY,yaw])
                 is_detected = True
                 
