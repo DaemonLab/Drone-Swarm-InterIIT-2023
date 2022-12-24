@@ -1,0 +1,64 @@
+from pluto.msg.parser import *
+from pluto.msg.cmdList import *
+
+
+class MsgType():
+    def __init__(self):
+        self.parse = Parse()
+
+    def command(self, cmd):
+        return self.parse.convert([cmd], MSP_SET_COMMAND)
+
+    def arming(self, arm: bool):
+        RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1000, 1700, 1500, 1000, 1500, 1200
+        data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+        if arm:
+            data[-1] = 1500
+            return self.parse.convert(data, MSP_SET_RAW_RC)
+        else:
+            data[-1] = 901
+            return self.parse.convert(data, MSP_SET_RAW_RC)
+    
+    def move(self, cmd):
+        RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1000, 1500, 1500
+
+        if cmd=="right":
+            RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW  = 1500, 1700, 1500, 1500
+            data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+        
+        if cmd=="left":
+            RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW  = 1500, 1300, 1500, 1500
+            data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+        
+        if cmd=="backward":
+            RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW  = 1300, 1500, 1500, 1500
+            data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+        
+        if cmd=="forward":
+            RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW  = 1700, 1500, 1500, 1500
+            data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+            
+        if cmd=="up":
+            RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW  = 1500, 1800, 1500, 1500
+            data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+            
+        if cmd=="down":
+            RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW  = 1500, 1200, 1500, 1500
+            data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+        
+        if cmd=="clck":
+            RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW  = 1500, 1500, 1500, 1700
+            data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+            
+        if cmd=="anticlck":
+            RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW  = 1500, 1500, 1500, 1300
+            data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+        
+        if cmd=="IMU":
+            data = []
+        
+        return self.parse.convert(data, MSP_SET_RAW_RC)
+
+
+
+
