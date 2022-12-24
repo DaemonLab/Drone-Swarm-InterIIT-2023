@@ -1,5 +1,5 @@
-from plutopy import Connection
-from plutopy import Message
+from pypluto import Connection
+from pypluto import Message
 
 
 class Drone():

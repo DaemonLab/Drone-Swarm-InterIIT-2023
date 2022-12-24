@@ -1,5 +1,5 @@
 "Entry "
-from plutopy import Drone
+from pypluto import Drone
 import time
 
 if __name__ == '__main__':
