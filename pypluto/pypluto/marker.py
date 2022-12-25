@@ -81,7 +81,7 @@ class Aruco:
 
         is_detected = False
         pose_r_t_dict = {} 
-        If you have multiple markers, you could use cv::aruco::estimatePoseSingleMarkers that will solve this instability in the solution
+        
 
         
         #prev method
