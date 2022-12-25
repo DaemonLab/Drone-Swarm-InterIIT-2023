@@ -1,5 +1,5 @@
 "Entry "
-from pypluto import *
+from pypluto.pluto import *
 import time
 
 if __name__ == '__main__':
@@ -7,12 +7,13 @@ if __name__ == '__main__':
     client.arm()
     time.sleep(5)
     print("Takeoff")
-    client.getIMU()
-    client.up()
+    # client.getIMU()
+    client.move("X", 200)
     time.sleep(5)
-    print("Landing")
-    client.forward()
+    client.move("X", 0)
+    client.move("Y", 100)
     time.sleep(5)
+    client.move("Y", 0)
     print("Disarm")
     client.disArm()
     time.sleep(5)
