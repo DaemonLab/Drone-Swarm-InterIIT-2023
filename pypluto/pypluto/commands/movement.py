@@ -2,12 +2,10 @@ from pypluto.Comm.server import Connection
 from pypluto.Comm.msg import Message
 import numpy as np
 
+class Moving
 def arming(self, arm: bool):
-    L = 1000  # LOW
-    C = 1500  # center
-    H = 2000  # High
-    RC_ROLL, RC_PITCH, RC_YAW, RC_THROTTLE, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = C, C, L, L, 1500, 1000, 1500, 1200
-    data = [RC_ROLL, RC_PITCH, RC_YAW, RC_THROTTLE, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+    RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1500, 1800, 1500, 1000, 1500, 1500
+    data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
     if arm:
         data[-1] = 1500
         self.sendData(self.msg.set_raw_rc(data),"ARM")
@@ -17,7 +15,7 @@ def arming(self, arm: bool):
 
     
 def move(self, direction, *args):
-    center = np.array([1500, 1500, 1500, 1500]) #RC_ROLL, RC_PITCH, RC_YAW, RC_THROTTLE
+    center = np.array([1500, 1500, 1500, 1500])
 
     RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1500, 1500
     speed = 100
@@ -45,6 +43,6 @@ def move(self, direction, *args):
         "Z": np.array([0, 0, 0, speed])
     }
     
-    RC_ROLL, RC_PITCH, RC_YAW, RC_THROTTLE,  = center + change[direction]
-    data = [RC_ROLL, RC_PITCH, RC_YAW, RC_THROTTLE, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+    RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW,  = center + change[direction]
+    data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
     self.sendData(self.msg.set_raw_rc(data),"Move")
