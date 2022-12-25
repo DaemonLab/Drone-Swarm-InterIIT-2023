@@ -48,7 +48,14 @@ class Drone():
         RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1500, 1500
         speed = 100
         for arg in args:
-            speed = arg
+            speed = int(arg)
+        
+        if speed>2100:
+            print("Clipping speed to 2100")
+            speed = 2100
+        if speed<900:
+            print("Clipping speed to 900")
+            speed = 900
 
         change = {
             "forward": np.array([0, speed, 0, 0]),
@@ -57,6 +64,8 @@ class Drone():
             "right": np.array([speed, 0, 0, 0]),
             "up": np.array([0, 0, 0, speed]),
             "down": np.array([0, 0, 0, -speed]),
+            "clck": np.array([0, 0, speed, 0]),
+            "anticlck": np.array([0, 0, -speed, 0]),
             "Y": np.array([0, speed, 0, 0]),
             "X": np.array([speed, 0, 0, 0]),
             "Z": np.array([0, 0, 0, speed])

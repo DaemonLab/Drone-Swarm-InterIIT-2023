@@ -15,5 +15,5 @@ if __name__ == '__main__':
     time.sleep(5)
     client.move("Y", 0)
     print("Disarm")
-    client.disArm()
+    client.disarm()
     time.sleep(5)

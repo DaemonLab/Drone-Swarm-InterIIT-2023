@@ -1,7 +1,5 @@
 import struct
-
-MSP_SET_COMMAND = 217   ## used for predefined commands
-MSP_SET_RAW_RC = 200    ## 8 rc chennal
+from packets import *
 
 class Message():
     def __init__(self):
