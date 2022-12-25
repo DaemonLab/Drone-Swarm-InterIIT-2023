@@ -15,11 +15,11 @@ class PositionControl:
             "Y":(self.Y,self.desiredX),
             "Z":(self.Y,self.desiredZ)
         }
-        self.command = {
-            "X":,
-            "Y":(self.Y,self.desiredX),
-            "Z":(self.Y,self.desiredZ)
-        }
+        # self.command = {
+        #     "X": ,
+        #     "Y":(self.Y,self.desiredX),
+        #     "Z":(self.Y,self.desiredZ)
+        # }
         
         
 
@@ -30,6 +30,6 @@ class PositionControl:
             self.X, self.Y, self.Z, self.yaw = pose
     
     def PIDcontrol(self, direction):
-
+        pass
 
 

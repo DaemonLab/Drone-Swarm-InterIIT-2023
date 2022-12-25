@@ -1,5 +1,4 @@
 import struct
-import numpy as np
 
 MSP_SET_COMMAND = 217   ## used for predefined commands
 MSP_SET_RAW_RC = 200    ## 8 rc chennal
@@ -23,62 +22,13 @@ class Message():
         msg += bytes([checksum])
         return msg
 
-    def command(self, cmd):
+    def set_command(self, cmd):
         return self.parse([cmd], MSP_SET_COMMAND)
 
-    def arming(self, arm: bool):
-        L = 1000  # LOW
-        C = 1500  # center
-        H = 2000  # High
-        RC_ROLL, RC_PITCH, RC_YAW, RC_THROTTLE, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = C, C, L, L, 1500, 1000, 1500, 1200
-        data = [RC_ROLL, RC_PITCH, RC_YAW, RC_THROTTLE, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
-        if arm:
-            data[-1] = 1500
-            return self.parse(data, MSP_SET_RAW_RC)
-        else:
-            data[-1] = 901
-            return self.parse(data, MSP_SET_RAW_RC)
-    
-        
-    def move(self, direction, *args):
-        center = np.array([1500, 1500, 1500, 1500]) #RC_ROLL, RC_PITCH, RC_YAW, RC_THROTTLE
-
-        RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1500, 1500
-        speed = 100
-        for arg in args:
-            speed = arg
-        
-        ## refactor this with a dictionary:
-        if direction=="forward":
-            change = np.array([0, speed, 0, 0])
-        
-        if direction=="backward":
-            change = np.array([0, -speed, 0, 0])
-        
-        if direction=="left":
-            change = np.array([-speed, 0, 0, 0])
-        
-        if direction=="right":
-            change = np.array([speed, 0, 0, 0])
-        
-        if direction=="up":
-            change = np.array([0, 0, 0, speed])
-        
-        if direction=="down":
-            change = np.array([0, 0, 0, -speed])
-
-        if direction=="Y":
-            change = np.array([0, speed, 0, 0])
-        
-        if direction=="X":
-            change = np.array([speed, 0, 0, 0])
-
-        if direction=="Z":
-            change = np.array([0, 0, 0, speed])
-        
-        RC_ROLL, RC_PITCH, RC_YAW, RC_THROTTLE,  = center + change
-        data = [RC_ROLL, RC_PITCH, RC_YAW, RC_THROTTLE, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+    def set_raw_rc(self, data):
         return self.parse(data, MSP_SET_RAW_RC)
+
+    
 
 
 
