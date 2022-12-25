@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import math
 
 class Aruco:
     ARUCO_DICT = {
@@ -31,8 +32,11 @@ class Aruco:
         self.arucoParams = cv2.aruco.DetectorParameters_create()
 
     def detectMarkers(self,img):
+        #don't we need to use a gray img here? remember to change inputs to gray_img
+        #gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         return cv2.aruco.detectMarkers(img, self.arucoDict, parameters=self.arucoParams)
-    
+        #cornersm, ids, rejected_img_points
+        
     def display(self,corners, ids, rejected, image):
         _, w, _ = image.shape
         if len(corners) > 0:
@@ -70,13 +74,27 @@ class Aruco:
 
         return image
 
-    def get_pose(self,image):
+    def get_pose(self,corners, ids, rejected, image, matrix_coefficients, distortion_coefficients):
+        
+        #matrix_coefficients - Intrinsic matrix of the calibrated camera
+        #distortion_coefficients - Distortion coefficients associated with our camera
+
         is_detected = False
-        pose = None
+        pose_r_t_dict = {} 
+        
+
+        
+        #prev method
         if len(corners) > 0:
             
             
             for (markerCorner, markerID) in zip(corners, ids):
+                
+                # to get z dist in tvec --------------
+                rvec, tvec, markerPoints = cv2.aruco.estimatePoseSingleMarkers(corners[markerID], 0.02, matrix_coefficients,
+                                                                       distortion_coefficients)
+                
+                #-----------------------------
                 
                 corners = markerCorner.reshape((4, 2))
                 (topLeft, topRight, bottomRight, bottomLeft) = corners
@@ -89,8 +107,8 @@ class Aruco:
                 cX, cY = int((topRight + bottomLeft)/2)
                 hX, hY = int((topLeft+topRight)/2)
                 tX, tY = hX-cX, hY-cY
-                yaw = np.arctan2(tY, tX)
-                pose = np.array([cX,cY,yaw])
+                yaw = np.arctan2(tY, tX) 
+                pose = np.array([cX,cY,tvec[2] , yaw])      #mostly idx 2 is for z 
                 is_detected = True
                 
         return pose, is_detected
