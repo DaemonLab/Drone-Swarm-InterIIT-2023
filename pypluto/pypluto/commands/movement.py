@@ -26,10 +26,10 @@ class Moving():
         for arg in args:
             speed = int(arg)
     
-        if speed>2100:
+        if speed + 1500 > 2100:
             print("Clipping speed to 2100")
             speed = 2100
-        if speed<900:
+        if speed + 1500 < 900:
             print("Clipping speed to 900")
             speed = 900
 
