@@ -34,7 +34,7 @@ msg = """
     """
 keyboard_control={  #dictionary containing the key pressed abd value associated with it
                     '[A': 10, # up arrow fwd pitch
-                    '[D': 30, # left arrow left pitch
+                    '[D': 30, # left arrow left roll
                     '[C': 40, # right arrow right roll
                     'w':50, # increase throttle
                     's':60, # decrease throttle
