@@ -1,10 +1,10 @@
-from pluto.msg.parser import *
-from pluto.msg.cmdList import *
+from pypluto.Comm.packets import *
+from pypluto.Comm.msg import Message
 
 
 class MsgType():
     def __init__(self):
-        self.parse = Parse()
+        self.parse = Message()
 
     def command(self, cmd):
         return self.parse.convert([cmd], MSP_SET_COMMAND)

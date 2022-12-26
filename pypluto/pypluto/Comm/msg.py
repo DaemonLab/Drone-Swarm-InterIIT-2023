@@ -29,10 +29,3 @@ class Message():
 
     def set_raw_rc(self, data):
         return self.parse(data, MSP_SET_RAW_RC)
-
-    
-
-
-
-
-
