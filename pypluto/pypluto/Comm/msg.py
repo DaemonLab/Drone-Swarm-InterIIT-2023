@@ -25,7 +25,7 @@ class Message():
         return msg
 
     def set_command(self, cmd):
-        return self.parse([cmd], MSP_SET_COMMAND)
+        return self.parse(cmd, MSP_SET_COMMAND)
 
     def set_raw_rc(self, data):
         return self.parse(data, MSP_SET_RAW_RC)
