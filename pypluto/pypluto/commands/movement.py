@@ -1,13 +1,13 @@
 from pypluto.Comm.server import Connection
 from pypluto.Comm.msg import Message
 import numpy as np
+import time
 
 class Move():
 
     def __init__(self):
         self.msg = Message()
 
-    '''
     def arming(self, arm: bool):
         """
         Parses the arm and disarm commands.
@@ -31,10 +31,9 @@ class Move():
 
         parsed = self.msg.set_raw_rc(data)
         return parsed
-    '''
     
-    def arm(self):
-        RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1000, 1500, 1500, 1500, 1500, 1500
+    '''def arm(self):
+        RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1000, 1700, 1500, 1000, 1500, 1200
         data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
         parsed = self.msg.set_raw_rc(data)
         return parsed
@@ -43,7 +42,7 @@ class Move():
         RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1300, 1500, 1500, 1500, 1500, 1200
         data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
         parsed = self.msg.set_raw_rc(data)
-        return parsed
+        return parsed'''
     
     def box_arm(self):
         RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500
@@ -53,9 +52,7 @@ class Move():
     
     
     def takeoff(self):
-        self.disarm()
-        self.box_arm()
-        data=[1]
+        data=1
         parsed=self.msg.set_command(data)
         return parsed
 

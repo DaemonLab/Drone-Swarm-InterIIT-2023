@@ -31,6 +31,9 @@ class Drone():
         """
         self.sendData(self.move_cmd.steer_cmd(direction, magnitude), f"STEER {direction}")
 
+    def takeoff(self):
+        self.sendData(self.move_cmd.takeoff() , "TAKEOFF")
+
     def sendData(self, data:bytes, err:str):
         try:
             print(data)
