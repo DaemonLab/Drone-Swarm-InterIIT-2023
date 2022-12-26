@@ -1,7 +1,10 @@
 "Entry "
 from pluto.API.drone import Drone
 from pluto import *
+
 import time
+
+#import threading
 
 import sys
 from select import select
@@ -39,8 +42,8 @@ keyboard_control={  #dictionary containing the key pressed abd value associated 
                     'w':50, # increase throttle
                     's':60, # decrease throttle
                     ' ': 70, # arm disarm
-                    'r':80, # 
-                    't':90,
+                    'r':80, # reset
+                    't':90, # autopilot
                     'p':100,
                     '[B':110, # down arrow bkwd pitch
                     'n':120,
@@ -150,6 +153,7 @@ if __name__ == '__main__':
             else:
                 if (key == '\x03'): # Ctrl+C break
                     break
+            client.getIMU()
 
     except Exception as e:
         print(e)

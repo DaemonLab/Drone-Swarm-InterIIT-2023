@@ -58,7 +58,7 @@ class Drone():
         self.sendData(self.msgType.arming(False), "Disarm")
         
     def getIMU(self):
-        self.sendData(self.msgType.move("IMU"), "IMU")
+        self.sendData(self.msgType.get_data("IMU"), "IMU")
 
     def sendData(self, data, err):
         try:
@@ -67,5 +67,3 @@ class Drone():
             print(self.conn.read_very_eager())
         except:
             print("Error While sending {} Data".format(err))
-
-

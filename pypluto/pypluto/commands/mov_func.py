@@ -54,7 +54,12 @@ class MsgType():
             RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW  = 1500, 1500, 1500, 1400
             data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
         
-        if cmd=="IMU":
-            data = []
-        
         return self.parse.convert(data, MSP_SET_RAW_RC)
+
+    def get_data(self,cmd):
+
+        if cmd == "IMU":
+            pkt_type = MSP_RAW_IMU
+            data=[None]*9
+
+        return self.parse.convert(data, pkt_type)
