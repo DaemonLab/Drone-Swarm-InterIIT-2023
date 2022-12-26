@@ -30,7 +30,40 @@ class Move():
 
         parsed = self.msg.set_raw_rc(data)
         return parsed
+    
+    
+    '''
+    def takeOff(self):
+        data=[1]
+        parsed=self.msg.set_command(data)
+        return parsed
 
+    def land(self):
+         data=[2]
+         parsed=self.msg.set_command(data)
+         return parsed
+
+    def backFlip(self):
+        data=[3]
+        parsed=self.msg.set_command(data)
+        return parsed
+
+    def frontFlip(self):
+         data=[4]
+         parsed=self.msg.set_command(data)
+         return parsed
+
+    def rightFlip(self):
+         data=[5]
+         parsed=self.msg.set_command(data)
+         return parsed
+
+    def leftFlip(self):
+         data=[6]
+         parsed=self.msg.set_command(data)
+         return parsed
+    '''  
+     
     
     def steer_cmd(self, direction:str, magnitude:int=100):
         """
