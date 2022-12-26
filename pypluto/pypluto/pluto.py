@@ -1,69 +1,39 @@
-from pluto.connector.connect import Connection
-from pluto.msg.types import *
+from pypluto.Comm.server import Connection
+from pypluto.Comm.msg import Message
+from pypluto.commands.movement import Move
+import numpy as np
 
 
 class Drone():
+    
     def __init__(self, DroneIP="192.168.4.1", DronePort="23"):
         self.DRONEIP = DroneIP
         self.DRONEPORT = DronePort
         self.conn = Connection(self.DRONEIP, self.DRONEPORT).connect()
-        self.msgType = MsgType()
+        self.move_cmd = Move()
 
-    def takeOff(self):
-        self.sendData(self.msgType.command(1), "takeOff")
-
-    def land(self):
-        self.sendData(self.msgType.command(2), "Land")
-
-    # def backFlip(self):
-    #     self.sendData(self.msgType.command(3), "BackFlip")
-
-    # def frontFlip(self):
-    #     self.sendData(self.msgType.command(4), "frontFlip")
-
-    # def rightFlip(self):
-    #     self.sendData(self.msgType.command(5), "rightFlip")
-
-    # def leftFlip(self):
-    #     self.sendData(self.msgType.command(6), "LeftFlip")
-    
-    def forward(self):
-        self.sendData(self.msgType.move("forward"), "Forward")
-
-    def backward(self):
-        self.sendData(self.msgType.move("backward"), "Backward")
-    
-    def left(self):
-        self.sendData(self.msgType.move("left"), "Left")
-    
-    def right(self):
-        self.sendData(self.msgType.move("right"), "Right")
-        
-    def up(self):
-        self.sendData(self.msgType.move("up"), "Up")
-        
-    def down(self):
-        self.sendData(self.msgType.move("down"), "Right")
-    
-    def clockwise(self):
-        self.sendData(self.msgType.move("clck"), "Clockwise")
-        
-    def anticlockwise(self):
-        self.sendData(self.msgType.move("anticlck"), "Anticlockwise")
-    
     def arm(self):
-        self.sendData(self.msgType.arming(True), "ARM")
-
-    def disArm(self):
-        self.sendData(self.msgType.arming(False), "Disarm")
+        self.sendData(self.move_cmd.arming(True), "ARM")   
         
-    def getIMU(self):
-        self.sendData(self.msgType.get_data("IMU"), "IMU")
+    def disarm(self):
+        self.sendData(self.move_cmd.arming(False), "DISARM")
 
-    def sendData(self, data, err):
+    def steer(self, direction:str, magnitude:int=100):
+        """
+        Steers the drone in the specified direction or angle.
+
+        Parameters
+        ----------
+        direction : str
+            Valid inputs - "forward", "backward", "left", "right", "up", "down", "pitch", "roll", "throttle" and "yaw".
+        magnitude : int
+            Magnitude over which the drone steers, -600<magnitude<600
+        """
+        self.sendData(self.move_cmd.steer_cmd(direction, magnitude), f"STEER {direction}")
+
+    def sendData(self, data:bytes, err:str):
         try:
             print(data)
             self.conn.write(data)
-            print(self.conn.read_very_eager())
         except:
             print("Error While sending {} Data".format(err))

@@ -1,12 +1,11 @@
 from setuptools import setup
 
 setup(
-    name='Pluto',
+    name='pypluto',
     version='0.0.1',
-    packages=['pluto'],
+    packages=['pypluto'],
     url='https://github.com/DaemonLab/Drone-Swarm',
     license='Open Source',
     author='IIT_Indore',
-    author_email='me210003009@iiti.ac.in',
     description='This API to connect Pluto Drone'
 )

@@ -1,5 +1,5 @@
 "Entry "
-from pluto import *
+from pypluto import *
 import time
 
 if __name__ == '__main__':

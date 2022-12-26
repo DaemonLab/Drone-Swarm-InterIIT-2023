@@ -1,4 +1,4 @@
-from plutox import *
+from pypluto import *
 import time
 
 t0 = time.time()

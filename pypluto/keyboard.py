@@ -1,7 +1,6 @@
 "Entry "
-from pluto.API.drone import Drone
-from pluto import *
-
+from pypluto.pluto import Drone
+from pypluto import *
 import time
 
 #import threading
