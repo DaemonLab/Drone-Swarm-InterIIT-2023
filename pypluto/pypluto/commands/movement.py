@@ -97,7 +97,7 @@ class Move():
         Parameters
         ----------
         direction : str
-            Valid inputs - "forward", "backward", "left", "right", "up", "down", "pitch", "roll", "throttle" and "yaw".
+            Valid inputs - "forward", "backward", "left", "right", "up", "down".
         magnitude : int
             Magnitude over which the drone steers, -600<magnitude<600
 
@@ -127,13 +127,40 @@ class Move():
             "down": np.array([0, 0, -magnitude, 0]),
             "clck": np.array([0, 0, 0, magnitude]),
             "anticlck": np.array([0, 0, 0, -magnitude]),
-            "roll": np.array([magnitude, 0, 0, 0]),
-            "pitch": np.array([0, magnitude, 0, 0]),
-            "throttle": np.array([0, 0, magnitude, 0]),
-            "yaw": np.array([0, 0, 0, magnitude])
         }
     
         RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW,  = center + change[direction]
+        data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+        parsed = self.msg.set_raw_rc(data)
+        return parsed
+
+    def set_steer_data(self, magnitude):
+        """
+        Parses the steer commands.
+
+        Parameters
+        ----------
+        magnitude : array-like
+            Magnitude of roll, pitch, throttle, and yaw commands -600<magnitude<600
+
+        Returns
+        -------
+        parsed : bytes
+            The parsed data to be sent to the drone.
+        """
+
+        center = np.array([1500, 1500, 1500, 1500])
+
+        RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1500, 1500
+        for i in range(4):
+            if magnitude[i] + 1500 > 2100:
+                print("Clipping magnitude to 2100")
+                magnitude[i] = 2100
+            if magnitude[i] + 1500 < 900:
+                print("Clipping magnitude to 900")
+                magnitude[i] = 900
+    
+        RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW,  = center + np.array(magnitude)
         data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
         parsed = self.msg.set_raw_rc(data)
         return parsed

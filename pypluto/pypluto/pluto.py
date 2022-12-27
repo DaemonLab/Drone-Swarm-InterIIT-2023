@@ -20,16 +20,29 @@ class Drone():
 
     def steer(self, direction:str, magnitude:int=100):
         """
-        Steers the drone in the specified direction or angle.
+        Steers the drone in the specified direction.
 
         Parameters
         ----------
         direction : str
-            Valid inputs - "forward", "backward", "left", "right", "up", "down", "pitch", "roll", "throttle" and "yaw".
+            Valid inputs - "forward", "backward", "left", "right", "up", "down".
         magnitude : int
             Magnitude over which the drone steers, -600<magnitude<600
         """
         self.sendData(self.move_cmd.steer_cmd(direction, magnitude), f"STEER {direction}")
+    
+    def set_steer(self, magnitude):
+        """
+        Changes the msg data.
+
+        Parameters
+        ----------
+        magnitude : array-like
+            Magnitude of roll, pitch, throttle, and yaw commands -600<magnitude<600
+        """
+        if len(magnitude) != 4:
+            print("Invalid legth of message array. format: [roll, pitch, throttle, yaw]")
+        self.sendData(self.move_cmd.set_steer_data(magnitude), f"Sending {magnitude}")
 
     def takeoff(self):
         self.sendData(self.move_cmd.takeoff() , "TAKEOFF")

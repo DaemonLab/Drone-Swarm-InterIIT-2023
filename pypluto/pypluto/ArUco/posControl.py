@@ -57,19 +57,18 @@ class Position:
             else:
                 dt = current_time - prev_time
                 roll, pitch, throttle = self.PIDcontrol(dt) 
+                yaw = 0
 
                 # apply commands
-                self.client.steer("roll", roll)
-                self.client.steer("pitch", pitch)
-                self.client.steer("throttle", throttle)
+                self.client.set_steer([roll, pitch, throttle, yaw])
+
                 prev_time = current_time
 
             key = cv2.waitKey(1) & 0xFF
             if key == ord("q"):
                 print("Camera feed lost. Stabilizing...")
-                self.client.steer("roll", 0)
-                self.client.steer("pitch", 0)
-                self.client.steer("throttle", 0)
+                roll, pitch, throttle, yaw = 0, 0, 0, 0
+                self.client.set_steer([roll, pitch, throttle, yaw])
                 break
 
 
