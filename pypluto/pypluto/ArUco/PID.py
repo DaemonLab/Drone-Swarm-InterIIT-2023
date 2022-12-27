@@ -1,4 +1,4 @@
-import numpy as np
+## Sample code
 
 class State:
 

@@ -42,7 +42,7 @@ class Position:
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 
-        prev_time = time.time() + 0.1
+        prev_time = time.time() - 0.1 # to avoid divide by zero
         while cap.isOpened():
             
             current_time = time.time()
@@ -57,6 +57,8 @@ class Position:
             else:
                 dt = current_time - prev_time
                 roll, pitch, throttle = self.PIDcontrol(dt) 
+
+                # apply commands
                 self.client.steer("roll", roll)
                 self.client.steer("pitch", pitch)
                 self.client.steer("throttle", throttle)
