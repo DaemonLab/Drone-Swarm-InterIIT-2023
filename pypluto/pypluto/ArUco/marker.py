@@ -37,7 +37,7 @@ class Aruco:
         return cv2.aruco.detectMarkers(img, self.arucoDict, parameters=self.arucoParams)
         #cornersm, ids, rejected_img_points
         
-    def display(self,corners, ids, rejected, image):
+    def display(self,corners, ids, image):
         _, w, _ = image.shape
         if len(corners) > 0:
             
@@ -74,7 +74,7 @@ class Aruco:
 
         return image
 
-    def get_pose(self,corners, ids, rejected, image, matrix_coefficients, distortion_coefficients):
+    def get_pose(self,corners, ids, matrix_coefficients, distortion_coefficients):
         
         #matrix_coefficients - Intrinsic matrix of the calibrated camera
         #distortion_coefficients - Distortion coefficients associated with our camera
@@ -131,7 +131,7 @@ if __name__ == "__main__":
 
         corners, ids, rejected = aruco.detectMarkers(image)
 
-        detected_markers = aruco.display(corners, ids, rejected, image)
+        detected_markers = aruco.display(corners, ids, image)
 
         cv2.imshow("Image", detected_markers)
 

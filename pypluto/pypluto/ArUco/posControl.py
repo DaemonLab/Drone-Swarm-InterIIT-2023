@@ -1,37 +1,77 @@
-from marker import Aruco
 import numpy as np
+import time
+from marker import Aruco
+import cv2
+from CAM_CONFIGS import *
 
 class Position:
 
-    # to be tuned
-    KPx = 1.0
-    KIx = 0
-    KDx = 0
-    KPy = 1.0
-    KIy = 0
-    KDy = 0
+    KPID = np.array([
+        [1.0, 1.0, 1.0],
+        [0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0],
+    ])
+    def __init__(self,client):
+        self.currentVec = np.array([0.0, 0.0, 0.0])  # (X, Y, Z)
+        self.desiredVec = np.array([0.0, 0.0, 0.0])  # (targetX, targetY, targetZ)
+        self.previousErr = np.array([0.0, 0.0, 0.0]) 
+        self.integralErr = np.array([0.0, 0.0, 0.0])  
+        self.client = client    
 
-    def __init__(self):
-        self.X = 0.0
-        self.Y = 0.0
-        self.Z = 0.0
-        self.yaw = np.pi/2
-        self.desiredX = 0.0
-        self.desiredY = 0.0
-        self.desiredZ = 0.0
-        self.coordinates = {
-            "X":(self.X,self.desiredX),
-            "Y":(self.Y,self.desiredX)
-        }        
+    
+    def PIDcontrol(self, dt):
+
+        Err = self.desiredVec - self.currentVec
+        terms = np.vstack((
+            Err,
+            (Err-self.previousErr)/dt,
+            self.integralErr
+            ))
+        command = np.sum(np.dot(terms, self.KPID), axis=0)
         
 
-    def get_pose(self,image):
-        aruco = Aruco("DICT_5X5_50")
-        pose,is_detected = aruco.get_pose(image)
-        if is_detected:
-            self.X, self.Y, self.yaw = pose
-    
-    def PIDcontrol(self, axis):
+        self.previousErr = Err
+        self.integralErr += Err*dt
+
+        return command
+
+    def go_to(self, desiredVec):
+        self.desiredVec = desiredVec # in [pixels, pixels, altitude in cm]
+        cap = cv2.VideoCapture(0)
+
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+
+        prev_time = time.time() + 0.1
+        while cap.isOpened():
+            
+            current_time = time.time()
+            _, image = cap.read()
+            aruco = Aruco("DICT_5X5_50")
+            corners, ids, rejected = aruco.detectMarkers(image)
+            x,y,z,_ = aruco.get_pose(corners, ids, matrix_coefficients=MATRIX_COEFFS, distortion_coefficients=DIST_COEFFS)
+            self.currentVec = np.array([x,y,z]) # [pixels, pixels, altitude in cm]
+            self.previousErr = self.desiredVec - self.currentVec
+            if np.linalg.norm(self.previousErr[:2])<10 and abs(self.previousErr[2])<5:
+                print("Target Reached")
+            else:
+                dt = current_time - prev_time
+                roll, pitch, throttle = self.PIDcontrol(dt) 
+                self.client.steer("roll", roll)
+                self.client.steer("pitch", pitch)
+                self.client.steer("throttle", throttle)
+                prev_time = current_time
+
+            key = cv2.waitKey(1) & 0xFF
+            if key == ord("q"):
+                print("Camera feed lost. Stabilizing...")
+                self.client.steer("roll", 0)
+                self.client.steer("pitch", 0)
+                self.client.steer("throttle", 0)
+                break
+
+
+        
         
 
 
