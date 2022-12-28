@@ -2,7 +2,7 @@ from pypluto.Comm.server import Connection
 from pypluto.Comm.msg import Message
 from pypluto.commands.movement import Move
 import numpy as np
-
+import subprocess
 
 class Drone():
     
@@ -11,6 +11,7 @@ class Drone():
         self.DRONEPORT = DronePort
         self.conn = Connection(self.DRONEIP, self.DRONEPORT).connect()
         self.move_cmd = Move()
+        subprocess.run(['python' , 'commands/IN_STREAM.py'])
 
     def arm(self):
         self.sendData(self.move_cmd.arming(True), "ARM")   
