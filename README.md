@@ -1,14 +1,15 @@
 # Drone-Swarm
 
 This Branch
+- master starts build_fn (  starts processes p1(associated with camera ) & p2( associated with actual control of drone1)
+                  |
+             _____|_________________________________
+             |                                     |
+          camerafile                            pidfile
+          (marker.py)                         (drone1_pid)
+ (send conti pose-data to pid file )           ( continously gets data from marker & publishes data to drone using api functions)
+          
 
-
-- PyDrona : has the funcitons for getting data from sensors.
-  - PlutoOPT (1.2) ~  PlutoX 
-- pluto-ros : ros-package of dronaaviation for reference 
-- Drona Swarm : Harsh B. 's code
 
 To Do-
-- Improve on the data packet creation step
-- Adding more data receiving functions
-
+- Sending the actual calculated values from posefile( marker) to pidfile instead of current pseudo values( camera wasn't working)
