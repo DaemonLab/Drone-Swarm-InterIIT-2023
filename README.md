@@ -7,7 +7,7 @@ This Branch
 -             |                                       |
 -             camerafile                            pidfile
 -             (marker.py)                         (drone1_pid)
--    (send conti pose-data to pid file )       ( continously gets data from marker & publishes data to drone using api functions)
+-     (send conti pose-data to pid file )       ( continously gets data from marker & publishes data to drone using api functions)
 
 
           
