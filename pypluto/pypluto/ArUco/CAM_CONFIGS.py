@@ -1,2 +1,0 @@
-MATRIX_COEFFS = []
-DIST_COEFFS = []
