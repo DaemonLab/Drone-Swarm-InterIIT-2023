@@ -4,17 +4,6 @@ import matplotlib.pyplot as plt
 
 drone=pluto()
 camera = WebcamVideoStream(src=2).start()
-drone.connect()
-drone.disarm()
-drone.arm()
-# drone.trim(5,15,0,0)
-
-drone.trim(-15,-5,0,0) #iit drone
-# drone.takeoff()
-drone.speedz(30,2)
-drone.speedz(0)
-print("takeoff")
-
 # initialize PID controller
 xError, yError, zError, yawError = 5, 5, 0.5, 0.3
 xErrorI, yErrorI, zErrorI, yawErrorI = 0, 0, 0, 0
@@ -24,30 +13,69 @@ xError_old, yError_old, zError_old, yawError_old = 0, 0, 0, 0
 Err = [xError, yError, zError, yawError]
 ErrI = [xErrorI, yErrorI, zErrorI, yawErrorI]
 path = []
-fig = plt.figure()
-ax = fig.add_subplot(1,1,1, projection="3d")
-# while True:
-#     pose, image = camera.read_pose()
-#     print("Aruco not detected")
-#     if pose is not None:
-#         break
+# fig = plt.figure()
+# ax = fig.add_subplot(1,1,1, projection="3d")
+drone.connect()
+drone.disarm()
+drone.arm()
+
+# drone.trim(5,18,0,0) #akshit drone
+
+drone.trim(-15,-5,0,0) #iit drone
+
+# drone.takeoff()
 while True:
     pose, image = camera.read_pose()
+    print("Aruco not detected")
+    if pose is not None:
+        break
+drone.speedz(30,2)
+# drone.speedz(0,5)
+print("takeoff")
 
-    # cv2.imshow("Image", image)
-    if pose is None:
-        continue
-        # print("Aruco Not Detected")
-        # pass
-        # drone.speedx(0)
-        # drone.speedy(0)
-        # drone.speedz(0)
-        # drone.rotate(0)
-    else:
-        # path.append(pose)
-        
-        roll_command, pitch_command, throttle_command, yawCommand, Err, ErrI = go_to(pose, [450,392, 0.9], Err, ErrI)
-        roll_command, pitch_command, throttle_command, yawCommand = int(roll_command),int(pitch_command), int(throttle_command), int(yawCommand)
+
+timer=0
+roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 0, 0
+while True:
+    try:
+        pose, image = camera.read_pose()
+
+        # cv2.imshow("Image", image)
+        if pose is None:
+            
+            if timer>=500:
+                print("Aruco not detected landing")
+                drone.land()
+            timer=timer+1
+            # if timeout == 0:
+            #     start = time.time()
+            #     timeout = 1
+            #     print('TIMEOUT START')
+            # if timeout == 1 and (time.time()-start == 5):
+            #     print("Aruco not detected landing")
+            #     drone.land()
+
+
+            
+
+            
+            
+        if pose is not None:
+            path.append(pose)
+            timer = 0
+
+            
+            roll_command, pitch_command, throttle_command, yawCommand, Err, ErrI = go_to(pose, [640,360, 1.0], Err, ErrI)
+            roll_command, pitch_command, throttle_command, yawCommand = int(roll_command),int(pitch_command), int(throttle_command), int(yawCommand)
+            
+            if np.sqrt((450-pose[0])**2+(392-pose[1])**2)<25:
+                print(f"Pose: {pose}")
+                print("Target Reached.")
+                # drone.land()
+                # break
+                # drone.disarm()
+                # break¸       
+        # plt.pause(0.001) 
         drone.speedz(throttle_command)
         drone.speedx(roll_command)
         drone.speedy(pitch_command)
@@ -61,16 +89,9 @@ while True:
         
 
         # np.linalg.norm(np.array([xError, yError]))<10 and 
-        # if np.linalg.norm(np.array([xError, yError]))<10:
-        if np.sqrt((450-pose[0])**2+(392-pose[1])**2)<25:
-            print(f"Pose: {pose}")
-            print("Target Reached.")
-            drone.land()
-            break
-            # drone.disarm()
-            # break¸       
-    # plt.pause(0.001)  
-
+        # if np.linalg.norm(np.array([xError, yError]))<10: 
+    except KeyboardInterrupt:
+        break
 
 
 

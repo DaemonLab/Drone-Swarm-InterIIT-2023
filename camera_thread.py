@@ -39,7 +39,7 @@ class WebcamVideoStream:
     def read_pose(self):
         # return the frame most recently read
         corners, ids, _ = self.aruco.detectMarkers(self.frame)
-        pose, is_detected, detected_markers = self.aruco.get_pose(corners, ids, self.frame, [450,392], display=True)
+        pose, is_detected, detected_markers = self.aruco.get_pose(corners, ids, self.frame, [640,360], display=True)
         if not is_detected:
             detected_markers = self.frame
         return pose, detected_markers #self.frame

@@ -200,6 +200,7 @@ class pluto:
         Val=self.changeCRC(self.set_command_array)
         self.set_command_array[7]=Val
         self.tn.write(self.set_command_array)
+        #time.sleep(0.5)
         print(self.set_command_array)
         self.speedz(1,3)
         

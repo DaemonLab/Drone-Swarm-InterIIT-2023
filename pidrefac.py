@@ -5,12 +5,12 @@ import cv2
 from camera_thread import WebcamVideoStream
 
 KPx, KPy, KPz, KPyaw = 0.01, 0.010, 150, 100
-KIx, KIy, KIz, KIyaw = 0.000, 0.000, 0, 0
+KIx, KIy, KIz, KIyaw = 0.0005, 0.0005, 0, 0
 KDx, KDy, KDz, KDyaw = 0.0, 0.0, 0, 0
 
 
 
-YAW_TARGET = 1.5708
+# YAW_TARGET = 1.5708
 
 
 
@@ -21,7 +21,7 @@ def go_to(pose, target, Err, ErrI):
     xError, yError, zError, yawError = Err
     xErrorI, yErrorI, zErrorI, yawErrorI = ErrI
 
-    xTarget, yTarget, heightTarget = target
+    xTarget, yTarget, heightTarget, yawTarget = target
 
 
 
@@ -30,13 +30,16 @@ def go_to(pose, target, Err, ErrI):
     zError_old = zError
     yawError_old = yawError
 
+    old_Err = Err
+
     x,   y,   z,   yaw = pose
 
     xError = xTarget-x
     yError = yTarget-y
     zError = heightTarget-z
-    yawError = YAW_TARGET-yaw
+    yawError = yawTarget-yaw
 
+    
 
     xErrorI += xError
     yErrorI += yError
@@ -64,18 +67,3 @@ def go_to(pose, target, Err, ErrI):
     ErrI = [xErrorI, yErrorI, zErrorI, yawErrorI]
 
     return roll_command, pitch_command, throttle_command, yawCommand, Err, ErrI
-
-
-        # drone.trim(roll_command,pitch_command, throttle_command, yawCommand)
-
-        # if np.linalg.norm(np.array([xError, yError]))<10 and abs(zError)<0.05:
-        #     print("Target Reached. Landing ...")
-        #     drone.land()
-        #     drone.disarm()
-
-
-
-
-
-                  
-
