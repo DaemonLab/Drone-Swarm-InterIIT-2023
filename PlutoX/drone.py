@@ -4,7 +4,7 @@ import math
 
 class pluto:
    
-    def __init__(self, DroneIP="192.168.4.1", DronePort="23"):
+    def __init__(self, DroneIP="192.168.17.144", DronePort="23"):
         self.DRONEIP = DroneIP
         self.DRONEPORT = DronePort
         self.raw_rc_array=bytearray([36,77,60,16,200,220,5,220,5,220,5,220,5,176,4,232,3,220,5,176,4,234])

@@ -13,6 +13,12 @@ xError_old, yError_old, zError_old, yawError_old = 0, 0, 0, 0
 Err = [xError, yError, zError, yawError]
 ErrI = [xErrorI, yErrorI, zErrorI, yawErrorI]
 path = []
+
+
+points = [(640,360), (400,360)]
+
+target_point = points[0]
+
 # fig = plt.figure()
 # ax = fig.add_subplot(1,1,1, projection="3d")
 drone.connect()
@@ -21,9 +27,10 @@ drone.arm()
 
 # drone.trim(5,18,0,0) #akshit drone
 
-drone.trim(-15,-5,0,0) #iit drone
+drone.trim(-10,-5,0,0) #iit drone
 
 # drone.takeoff()
+# drone.speedz(0,4)
 while True:
     pose, image = camera.read_pose()
     print("Aruco not detected")
@@ -46,6 +53,7 @@ while True:
             if timer>=500:
                 print("Aruco not detected landing")
                 drone.land()
+                break
             timer=timer+1
             # if timeout == 0:
             #     start = time.time()
@@ -54,7 +62,6 @@ while True:
             # if timeout == 1 and (time.time()-start == 5):
             #     print("Aruco not detected landing")
             #     drone.land()
-
 
             
 
@@ -65,12 +72,13 @@ while True:
             timer = 0
 
             
-            roll_command, pitch_command, throttle_command, yawCommand, Err, ErrI = go_to(pose, [640,360, 1.0], Err, ErrI)
+            roll_command, pitch_command, throttle_command, yawCommand, Err, ErrI = go_to(pose, [*target_point, 1.0], Err, ErrI)
             roll_command, pitch_command, throttle_command, yawCommand = int(roll_command),int(pitch_command), int(throttle_command), int(yawCommand)
             
             if np.sqrt((450-pose[0])**2+(392-pose[1])**2)<25:
                 print(f"Pose: {pose}")
                 print("Target Reached.")
+                target_point = points[1]
                 # drone.land()
                 # break
                 # drone.disarm()

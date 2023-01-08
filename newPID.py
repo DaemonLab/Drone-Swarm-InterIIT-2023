@@ -4,8 +4,8 @@ from marker import Aruco
 import cv2
 from camera_thread import WebcamVideoStream
 
-KPx, KPy, KPz, KPyaw = 0.01, 0.010, 150, 100
-KIx, KIy, KIz, KIyaw = 0.000, 0.000, 0, 0
+KPx, KPy, KPz, KPyaw = 0.02, 0.02, 150, 100
+KIx, KIy, KIz, KIyaw = 0.0000, 0.0000, 0, 0
 KDx, KDy, KDz, KDyaw = 0.0, 0.0, 0, 0
 
 
@@ -72,6 +72,7 @@ def go_to(pose, target, Err, ErrI):
         #     print("Target Reached. Landing ...")
         #     drone.land()
         #     drone.disarm()
+
 
 
 
