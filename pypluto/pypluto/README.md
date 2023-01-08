@@ -6,7 +6,7 @@
 [![Issues][issues-shield]][issues-url]
 [![](https://img.shields.io/github/issues-pr-raw/DaemonLab/Drone-Swarm?color=important&style=for-the-badge)](https://github.com/DaemonLab/Drone-Swarm/pulls)
 
-# LiDAR Obstacle Avoidance Robots
+# Pluto Drones Python Wrapper
 This repository is being written for the Inter IIT Tech Meet 11.0 by the students of IIT Indore.
 
 [![](https://img.shields.io/badge/License-GPLv3-blue.svg)]()
