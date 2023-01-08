@@ -1,7 +1,7 @@
 # Drone-Swarm
 
 This Branch
-- master starts build_fn (  starts processes p1(associated with camera ) & p2( associated with actual control of drone1)
+- master starts these two files (  starts processes p1(associated with camera ) & p2( associated with actual control of drone1)
 -                        |
 -             ___________|_________________________________
 -             |                                       |
