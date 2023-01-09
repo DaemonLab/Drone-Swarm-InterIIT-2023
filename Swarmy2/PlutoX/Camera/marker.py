@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 import math
 import time
-# from 
 
 CAMERA_HEIGHT = 1.9 #m
 
@@ -163,5 +162,5 @@ def markerMainSender(connCam):  #connCam
     cv2.destroyAllWindows()
     cap.release()
 
-
-# markerMainSender(connCam='')
+if __name__ == "__main__":
+    markerMainSender(connCam='')

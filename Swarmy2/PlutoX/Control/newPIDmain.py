@@ -8,7 +8,7 @@ import time
 
 #Target coords
 xTarget,  yTarget, heightTarget = 640,360, 1.0  #pixel, pixel , height(m)
-550,192
+
 #pid gains
 KPx, KPy, KPz, KPyaw = 0.01, 0.01, 200, 10
 KIx, KIy, KIz, KIyaw = 0, 0, 0, 0
@@ -71,7 +71,7 @@ def pid(pose, target, Err, ErrI):
     return roll_command, pitch_command, throttle_command, yawCommand, Err, ErrI
 
 
-def receiver_at_drone1(conn):
+def pid_publisher(conn):
     """
     Function to recieve data from pid file and 
     using drone_api velocity fns 
