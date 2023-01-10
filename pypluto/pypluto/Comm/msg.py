@@ -59,3 +59,6 @@ class Message():
             data = []
         
         return self.parse.convert(data, MSP_SET_RAW_RC)
+
+    def decode(self, data):
+        return self.parse.decode(data)

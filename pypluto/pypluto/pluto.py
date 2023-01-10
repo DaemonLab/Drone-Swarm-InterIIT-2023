@@ -62,9 +62,13 @@ class Drone():
 
     def sendData(self, data, err):
         try:
+            print("Sent data: ", end="")
             print(data)
             self.conn.write(data)
-            print(self.conn.read_very_eager())
+            print("ReadVeryEager data: ", end="")
+            recd = self.conn.read_very_eager()
+            print(recd)
+            print("Decoded data: ", self.Message.decode(recd))
         except:
             print("Error While sending {} Data".format(err))
 

@@ -11,6 +11,7 @@ class Parse:
         lenOfData = len(data)
         if data==[]:
             msg = self.HEADER + [self.DIRECTION["IN"]] + [lenOfData * 2] + [102]
+            print("Message to be packed: ", end="")
             print(msg)
             msg = struct.pack(self.MSP_MSG_PARSE[:-1] % 0, *msg)
         
@@ -18,12 +19,20 @@ class Parse:
             msg = self.HEADER + [self.DIRECTION["IN"]] + [lenOfData * 2] + [typeOfMsg] + data
             msg = struct.pack(self.MSP_MSG_PARSE[:-1] % lenOfData, *msg)
         
+        print("Packed message: ", end="")
         print(struct.unpack(self.MSP_MSG_PARSE[:-1] % lenOfData , msg))
+
+        print("Length of data: ", lenOfData)
 
         checksum = 0
         for i in msg[3:]:
             checksum ^= i
 
+        print("Checksum: ", checksum)
+
         msg += bytes([checksum])
         return msg
 
+    def decode(self, data):
+        msg = struct.unpack(self.MSP_MSG_PARSE % 9, data)
+        return msg
