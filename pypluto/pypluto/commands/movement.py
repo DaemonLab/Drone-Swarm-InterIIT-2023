@@ -85,10 +85,10 @@ class Move():
     
         if magnitude + 1500 > 2100:
             print("Clipping magnitude to 2100")
-            magnitude = 2100
+            magnitude = 600
         if magnitude + 1500 < 900:
             print("Clipping magnitude to 900")
-            magnitude = 900
+            magnitude = -600
 
         change = {
             "forward": np.array([0, magnitude, 0, 0]),
@@ -127,10 +127,10 @@ class Move():
         for i in range(4):
             if magnitude[i] + 1500 > 2100:
                 print("Clipping magnitude to 2100")
-                magnitude[i] = 2100
+                magnitude[i] = 600
             if magnitude[i] + 1500 < 900:
                 print("Clipping magnitude to 900")
-                magnitude[i] = 900
+                magnitude[i] = -600
     
         RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW,  = center + np.array(magnitude)
         data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
