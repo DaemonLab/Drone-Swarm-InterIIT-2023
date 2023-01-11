@@ -4,10 +4,10 @@ import numpy as np
 import time
 
 #Target coords
-xTarget,  yTarget, heightTarget = 640,360, 1.0  #pixel, pixel , height(m)
+xTarget,  yTarget, heightTarget = 640,360, 0.9  #pixel, pixel , height(m)
 
 #pid gains
-KPx, KPy, KPz, KPyaw = 0.1, 0.1, 500, 0
+KPx, KPy, KPz, KPyaw = 0.1, 0.1, 500, 150
 KIx, KIy, KIz, KIyaw = 0, 0, 0, 0
 KDx, KDy, KDz, KDyaw = 0, 0, 0, 0
 
@@ -100,7 +100,7 @@ def pid_publisher(conn):
     drone.steer("up",350)
 
     print("takeoff")
-
+    time.sleep(2)
     timer=0
     roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 0, 0
     drone.set_steer([roll_command, pitch_command, throttle_command, yawCommand])
@@ -151,6 +151,7 @@ def pid_publisher(conn):
             #prev cmd if pose is none
 
             drone.set_steer([roll_command, pitch_command, throttle_command, yawCommand])
+            print("ROLL":, roll_command, "|||", "PITCH":, pitch_command, "|||", "THROTTLE":, throttle_command, "|||", "YAW":, yaw_command, "|||", )
 
             '''----------------------------'''
             '''Very impt time.sleep '''
