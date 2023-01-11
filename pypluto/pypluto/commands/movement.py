@@ -7,6 +7,8 @@ class Move():
 
     def __init__(self):
         self.msg = Message()
+        self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE, self.RC_YAW = 1500, 1500, 1500, 1500
+        
 
     def arming(self, arm: bool):
         """
@@ -32,35 +34,55 @@ class Move():
         parsed = self.msg.set_raw_rc(data)
         return parsed
     
+    # def takeoff(self):
+    #     data=[1]
+    #     parsed=self.msg.set_command(data)
+    #     return parsed
+
+    # def land(self):
+    #     data=[2]
+    #     parsed=self.msg.set_command(data)
+    #     return parsed
+
+    # def backFlip(self):
+    #     data=[3]
+    #     parsed=self.msg.set_command(data)
+    #     return parsed
+
+    # def frontFlip(self):
+    #     data=[4]
+    #     parsed=self.msg.set_command(data)
+    #     return parsed
+
+    # def rightFlip(self):
+    #     data=[5]
+    #     parsed=self.msg.set_command(data)
+    #     return parsed
+
+    # def leftFlip(self):
+    #     data=[6]
+    #     parsed=self.msg.set_command(data)
+    #     return 
+        
     def takeoff(self):
-        data=[1]
-        parsed=self.msg.set_command(data)
+        RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE+300, self.RC_YAW, 1500, 1000, 1500, 1500
+        data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+        parsed = self.msg.set_raw_rc(data)
         return parsed
-
+    
     def land(self):
-        data=[2]
-        parsed=self.msg.set_command(data)
+        RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE-300, self.RC_YAW, 1500, 1000, 1500, 1500
+        data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+        parsed = self.msg.set_raw_rc(data)
         return parsed
 
-    def backFlip(self):
-        data=[3]
-        parsed=self.msg.set_command(data)
-        return parsed
+    def trim(self, roll, pitch, throttle, yaw):
+        self.RC_ROLL += roll
+        self.RC_PITCH += pitch
+        self.RC_THROTTLE += throttle
+        self.RC_YAW += yaw
 
-    def frontFlip(self):
-        data=[4]
-        parsed=self.msg.set_command(data)
-        return parsed
 
-    def rightFlip(self):
-        data=[5]
-        parsed=self.msg.set_command(data)
-        return parsed
-
-    def leftFlip(self):
-        data=[6]
-        parsed=self.msg.set_command(data)
-        return parsed
     
     def steer_cmd(self, direction:str, magnitude:int=100):
         """
@@ -79,7 +101,7 @@ class Move():
             The parsed data to be sent to the drone.
         """
 
-        center = np.array([1500, 1500, 1500, 1500])
+        center = np.array([self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE, self.RC_YAW])
 
         RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1500, 1500
     
@@ -121,7 +143,7 @@ class Move():
             The parsed data to be sent to the drone.
         """
 
-        center = np.array([1500, 1500, 1500, 1500])
+        center = np.array([self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE, self.RC_YAW])
 
         RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1500, 1500
         for i in range(4):

@@ -23,6 +23,7 @@ class Drone():
         self.move_cmd = Move()
         self.msg = Message()
         
+        
 
     def arm(self):
         self.sendData(self.move_cmd.arming(True), "ARM")   
@@ -37,8 +38,19 @@ class Drone():
         if len(magnitude) != 4:
             print("Invalid legth of message array. format: [roll, pitch, throttle, yaw]")
         self.sendData(self.move_cmd.set_steer_data(magnitude), f"Sending {magnitude}")
+    
+    def takeoff(self):
+        """
+        TRIM values within -50 to 50
+        """
+        self.sendData(self.move_cmd.takeoff() , "THROTTLE")
 
+    
+    def land(self):
+        self.sendData(self.move_cmd.land() , "LAND")
 
+    def trim(self, roll, pitch, throttle, yaw):
+        self.move_cmd.trim(roll, pitch, throttle, yaw)
 #changes 00:07
     # def takeoff(self):
     #     RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1800, 1500, 1500, 1000, 1500, 1500
@@ -52,14 +64,14 @@ class Drone():
     #     self.sendData(self.msg.set_raw_rc(data) , "LAND THROTTLE")
     #     self.sendData(self.move_cmd.land() , "LAND")
     
-    def backFlip(self):
-        self.sendData(self.move_cmd.backFlip() , "BACKFLIP")
+    # def backFlip(self):
+    #     self.sendData(self.move_cmd.backFlip() , "BACKFLIP")
     
-    def takeoff(self):
-        self.sendData(self.move_cmd.takeoff() , "BACKFLIP")
+    # def takeoff(self):
+    #     self.sendData(self.move_cmd.takeoff() , "BACKFLIP")
         
-    def land(self):
-        self.sendData(self.move_cmd.land() , "BACKFLIP")
+    # def land(self):
+    #     self.sendData(self.move_cmd.land() , "BACKFLIP")
         
     def sendData(self, data:bytes, err:str):
         global parent_conn,child_conn
