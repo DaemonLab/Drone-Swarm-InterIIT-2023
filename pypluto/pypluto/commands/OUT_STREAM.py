@@ -53,7 +53,7 @@ class out_stream():
                 if not child_conn.poll():     #Might want a do-while loop instead
                     #print(msg_rc[9],msg_rc[10])
                     self.conn.write(msg_rc)
-                    # time.sleep(0.1)
+                    time.sleep(0.1)
                     if flag_set_cmd:
                         self.conn.write(msg_set_cmd)
                         
@@ -76,6 +76,9 @@ class out_stream():
                 else:
                     self.parseData(child_conn)
             except KeyboardInterrupt:
+                while child_conn.poll():
+                    a = child_conn.recv()
+                child_conn.close()
                 break
             # time.sleep(0.04)
         

@@ -10,10 +10,10 @@ class Message():
         self.MSP_MSG_PARSE = '<3c2B%iHB'
     
     def parse(self, data, typeOfMsg):
-        print("Data = " , data)
+        #print("Data = " , data)
         lenOfData = len(data)
         msg = self.HEADER + [self.DIRECTION["IN"]] + [lenOfData * 2] + [typeOfMsg] + data
-        print(msg)
+        #print(msg)
         msg = struct.pack(self.MSP_MSG_PARSE[:-1] % lenOfData, *msg)
 
         # Checksum calc is XOR between <size>, <command> and (each byte) <data>

@@ -20,4 +20,3 @@ if __name__ == '__main__':
     time.sleep(4)
     #client1.disarm()
     client2.disarm()
-    time.sleep(5)

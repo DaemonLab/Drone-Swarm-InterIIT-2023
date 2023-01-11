@@ -1,10 +1,7 @@
-Metadata-Version: 1.0
+Metadata-Version: 2.1
 Name: pypluto
 Version: 0.0.1
 Summary: This API to connect Pluto Drone
 Home-page: https://github.com/DaemonLab/Drone-Swarm
 Author: IIT_Indore
-Author-email: UNKNOWN
 License: Open Source
-Description: UNKNOWN
-Platform: UNKNOWN
