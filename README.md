@@ -99,6 +99,16 @@ magnitude = [roll, pitch, throttle, yaw]
 <!-- NOTE: These explanationa have been set according to my understanding of the drone code -->
 <!-- Feel free to modify them if inaccurate -->
 
+## Manually stopping (killing) the drone
+
+Sometimes, it may happen that the python program using the API may end without deactivating (landing and/or disarming) the drone, and the drone may stay on. In that case, one can run the **kill.py** script, which will send the required commands to properly deactivate the drone. 
+
+Modify line 6 in the file as per the constructor you are using (if your IP address and port is not the default, as mentioned above in *'Prerequisites'* ).
+
+```python
+    client = Drone()
+```
+
 ## Roadmap
 
 ### Finalized
