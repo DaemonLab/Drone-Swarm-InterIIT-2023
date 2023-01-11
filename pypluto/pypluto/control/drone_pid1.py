@@ -7,7 +7,7 @@ import time
 xTarget,  yTarget, heightTarget = 640,360, 0.9  #pixel, pixel , height(m)
 
 #pid gains
-KPx, KPy, KPz, KPyaw = 0.1, 0.1, 500, 150
+KPx, KPy, KPz, KPyaw = 0.05, 0.05, 500, 150
 KIx, KIy, KIz, KIyaw = 0, 0, 0, 0
 KDx, KDy, KDz, KDyaw = 0, 0, 0, 0
 
@@ -82,7 +82,8 @@ def pid_publisher(conn):
     drone = Drone()
 
     # initialize PID controller
-    xError, yError, zError, yawError = 5, 5, 0.5, 0.3
+    # xError, yError, zError, yawError = 5, 5, 0.5, 0.3
+    xError, yError, zError, yawError = 0, 0, 0.0, 0.0
     xErrorI, yErrorI, zErrorI, yawErrorI = 0, 0, 0, 0
     xErrorD, yErrorD, zErrorD, yawErrorD = 0, 0, 0, 0
     xError_old, yError_old, zError_old, yawError_old = 0, 0, 0, 0
@@ -98,9 +99,11 @@ def pid_publisher(conn):
     drone.arm()
     time.sleep(5)
     drone.steer("up",350)
-
-    print("takeoff")
     time.sleep(2)
+
+    # drone.proc.close()
+    print("takeoff")
+    
     timer=0
     roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 0, 0
     drone.set_steer([roll_command, pitch_command, throttle_command, yawCommand])
@@ -151,7 +154,7 @@ def pid_publisher(conn):
             #prev cmd if pose is none
 
             drone.set_steer([roll_command, pitch_command, throttle_command, yawCommand])
-            print("ROLL":, roll_command, "|||", "PITCH":, pitch_command, "|||", "THROTTLE":, throttle_command, "|||", "YAW":, yaw_command, "|||", )
+            print("ROLL:", roll_command, " | ", "PITCH:", pitch_command, " | " , "THROTTLE:", throttle_command, " | ", "YAW:", yawCommand, " |", )
 
             '''----------------------------'''
             '''Very impt time.sleep '''
@@ -179,6 +182,13 @@ def pid_publisher(conn):
             # np.linalg.norm(np.array([xError, yError]))<10 and 
             # if np.linalg.norm(np.array([xError, yError]))<10: 
         except KeyboardInterrupt:
+            
+            print("\n-----Drone should land in 5sec---------")
+            drone.land()
+            time.sleep(5)
+            drone.disarm()
+
+        # time.sleep(5)
             break
 
 

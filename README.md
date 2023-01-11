@@ -28,7 +28,7 @@ This repository is being written for the Inter IIT Tech Meet 11.0 by the student
 
 ### Prerequisites
 
-*Put setup instructions here.*
+<!-- *Put setup instructions here.* -->
 
 The API is tested with the ```PrimusV4-Pluto_1_2-1.hex``` firmware installed on Pluto Drone.
 
@@ -40,10 +40,20 @@ Install the External Dependencies using the following command ```pip install -r 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Usage
-*Explain API cmds here.... might need a more detailed version like (make another section for structure)*
+<!-- *Explain API cmds here.... might need a more detailed version like (make another section for structure)* -->
 
 
 
+
+## Manually stopping (killing) the drone
+
+Sometimes, it may happen that the python program using the API may end without deactivating (landing and/or disarming) the drone, and the drone may stay on. In that case, one can run the **kill.py** script, which will send the required commands to properly deactivate the drone. 
+
+Modify line 6 in the file as per the constructor you are using (if your IP address and port is not the default, as mentioned above in *'Prerequisites'* ).
+
+```python
+    client = Drone()
+```
 
 ## Roadmap
 

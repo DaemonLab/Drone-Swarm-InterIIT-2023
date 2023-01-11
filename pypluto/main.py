@@ -13,7 +13,16 @@ if __name__ == '__main__':
     client2.arm()
     time.sleep(5)
     #client1.steer("up",400)
-    client2.steer("up",400)
+    # client2.steer("up",450)
+    start = time.time()
+    now = time.time()
+    gap = now -start
+    while (gap < 5):
+        print("a")
+        now = time.time()
+        gap = now - start 
+        client2.takeoff()
+    # client2.backFlip()
     time.sleep(4)
     #client1.land()
     client2.land()
