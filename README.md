@@ -12,3 +12,7 @@ master
   To Do-
 - Sending the actual calculated values from posefile( marker) to pidfile instead of current pseudo values( camera wasn't working)
 ( done now in SWARMY2)
+
+in main file-
+check cyclic rpt values to stabalize the drone at a hover position
+auto trimming check
