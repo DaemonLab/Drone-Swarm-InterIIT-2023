@@ -16,3 +16,5 @@ Run the ```keyboard.py``` file in terminal to control the drone flight interacti
     Left arrow(←)  : go left
     Right arrow(→) : go right
     CTRL+C to quit
+
+Note: The Drone Movement is with respect to user's [frame of reference](https://en.wikipedia.org/wiki/Frame_of_reference).
