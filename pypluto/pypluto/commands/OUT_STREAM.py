@@ -52,7 +52,7 @@ class out_stream():
             try:
                 if not child_conn.poll():     #Might want a do-while loop instead
                     #print(msg_rc[9],msg_rc[10])
-                    self.conn.write(msg_rc)
+                    self.conn.write(msg_rc)  # changes 00;07
                     time.sleep(0.1)
                     if flag_set_cmd:
                         self.conn.write(msg_set_cmd)
@@ -75,6 +75,8 @@ class out_stream():
                         flag_MAG_CALIB = False
                 else:
                     self.parseData(child_conn)
+                    # self.conn.write(msg_rc) #changes 00:07
+
             except KeyboardInterrupt:
                 while child_conn.poll():
                     a = child_conn.recv()
