@@ -7,7 +7,7 @@ import time
 xTarget,  yTarget, heightTarget = 640,360, 1.0  #pixel, pixel , height(m)
 
 #pid gains
-KPx, KPy, KPz, KPyaw = 0.06, 0.06, 500, 100
+KPx, KPy, KPz, KPyaw = 0.1, 0.1, 500, 0
 KIx, KIy, KIz, KIyaw = 0, 0, 0, 0
 KDx, KDy, KDz, KDyaw = 0, 0, 0, 0
 
@@ -103,6 +103,7 @@ def pid_publisher(conn):
 
     timer=0
     roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 0, 0
+    drone.set_steer([roll_command, pitch_command, throttle_command, yawCommand])
 
     
     start = time.time()
@@ -123,7 +124,7 @@ def pid_publisher(conn):
                 timeout_limit = now_time - start 
 
                 # if timer>=1000:
-                if timeout_limit > 10 : 
+                if timeout_limit > 5 : 
                     print("Aruco not detected ,landing")
                     drone.land()
                     break
@@ -155,7 +156,7 @@ def pid_publisher(conn):
             '''Very impt time.sleep '''
             #( if removed , it will not let you sleep)'''
             #0.03
-            time.sleep(0.08)
+            time.sleep(0.02)
             '''this sleep adjusts the running of this files while loop, 
             so that the rate of receiving from marker files is almost matched 
             to that of this file sending commands to drone using api '''

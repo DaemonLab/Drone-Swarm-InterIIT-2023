@@ -49,32 +49,37 @@ class out_stream():
         global flag_SET_TRIM
 
         while(True):
-            while not child_conn.poll():     #Might want a do-while loop instead
-                #print(msg_rc[9],msg_rc[10])
-                self.conn.write(msg_rc)
-                # time.sleep(0.1)
-                if flag_set_cmd:
-                    self.conn.write(msg_set_cmd)
+            try:
+                if not child_conn.poll():     #Might want a do-while loop instead
+                    #print(msg_rc[9],msg_rc[10])
+                    self.conn.write(msg_rc)
+                    # time.sleep(0.1)
+                    if flag_set_cmd:
+                        self.conn.write(msg_set_cmd)
+                        
+                    if flag_imu:
+                        self.conn.write(msg_imu)
+                        
+                    if flag_attitude:
+                        self.conn.write(msg_attitude)
+                        
+                    if flag_altitude:     #Put flags into bool sections to reduce computation
+                        self.conn.write(msg_altitude)
                     
-                if flag_imu:
-                    self.conn.write(msg_imu)
-                    
-                if flag_attitude:
-                    self.conn.write(msg_attitude)
-                    
-                if flag_altitude:     #Put flags into bool sections to reduce computation
-                    self.conn.write(msg_altitude)
-                
-                if flag_ACC_CALIB:
-                    self.conn.write(msg_ACC_CALIB)
-                    flag_ACC_CALIB = False
-                    
-                if flag_MAG_CALIB:
-                    self.conn.write(msg_MAG_CALIB)
-                    flag_MAG_CALIB = False
-            self.parseData(child_conn)
-            time.sleep(0.04)
+                    if flag_ACC_CALIB:
+                        self.conn.write(msg_ACC_CALIB)
+                        flag_ACC_CALIB = False
+                        
+                    if flag_MAG_CALIB:
+                        self.conn.write(msg_MAG_CALIB)
+                        flag_MAG_CALIB = False
+                else:
+                    self.parseData(child_conn)
+            except KeyboardInterrupt:
+                break
+            # time.sleep(0.04)
         
+        ''
     def parseData(self, child_conn):
         data = child_conn.recv()
         global msg_rc
