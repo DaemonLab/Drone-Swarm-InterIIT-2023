@@ -11,7 +11,7 @@ else:
     import termios
     import tty
 
-msg = """
+"""
     Control Your Drone!
     ---------------------------
     Moving around:
@@ -34,7 +34,7 @@ msg = """
     """
 keyboard_control={  #dictionary containing the key pressed abd value associated with it
                     '[A': 10, # up arrow fwd pitch
-                    '[D': 30, # left arrow left roll
+                    '[D': 30, # left arrow left pitch
                     '[C': 40, # right arrow right roll
                     'w':50, # increase throttle
                     's':60, # decrease throttle
@@ -94,59 +94,27 @@ def restoreTerminalSettings(old_settings):
         return
     termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
 
-def indentify_key(client,key_value):
-
-    # cmd = MsgType()
-    if key_value == 70:
-        # if(cmd.rcAUX4 == 1500):
-        #     disarm()
-        # else:
-        client.arm()
-    elif key_value == 10:
-        client.forward()
-    elif key_value == 30:
-        client.left()
-    elif key_value == 40:
-        client.right()
-    elif key_value == 80:
-        client.reset()
-    # elif key_value == 90:
-    #     if(cmd.isAutoPilotOn == 1):
-    #         cmd.isAutoPilotOn = 0
-    #     else:
-    #         cmd.isAutoPilotOn = 1
-    elif key_value == 50:
-        client.increase_height()
-    elif key_value == 60:
-        client.decrease_height()
-    elif key_value == 110:
-        client.backward()
-    elif key_value == 130:
-        client.takeOff()
-    elif key_value == 140:
-        client.land()
-    elif key_value == 150:
-        client.anticlockwise()
-    elif key_value == 160:
-        client.clockwise()
-
 if __name__ == '__main__':
     settings = saveTerminalSettings()
     
     client = Drone()
-
+    # client.arm()
+    # time.sleep(2)
+    # client.takeOff()
+    # time.sleep(2)
+    # client.forward()
+    # time.sleep(2)
+    # client.land()
+    # client.disArm()
     try:
-        print(msg)
         while(1):
             key = getKey(settings)
             print("YO" , key , "YO", sep='')
             if key in keyboard_control.keys():
                 print("executed" , keyboard_control[key] , "]]]")
-                indentify_key(client,keyboard_control[key])
-                # if (keyboard_control[key] == 70):
-                #     client.arm()
-                    #time.sleep(2)
-
+                if (keyboard_control[key] == 70):
+                    client.arm()
+                    time.sleep(2)
             else:
                 if (key == '\x03'): # Ctrl+C break
                     break

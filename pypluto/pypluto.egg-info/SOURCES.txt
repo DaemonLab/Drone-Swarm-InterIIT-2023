@@ -1,5 +1,6 @@
 setup.py
 pypluto/__init__.py
+pypluto/pluto.py
 pypluto.egg-info/PKG-INFO
 pypluto.egg-info/SOURCES.txt
 pypluto.egg-info/dependency_links.txt
