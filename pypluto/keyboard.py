@@ -48,12 +48,15 @@ keyboard_control={  #dictionary containing the key pressed abd value associated 
                     '2' : 30,
                     '3' : 35,
                     '4' : 45,
-                    'àH': 10, # up arrow fwd pitch (Windows)
-                    'àK': 30, # left arrow left roll (Windows)
-                    'àM': 40, # right arrow right roll (Windows)
-                    'àP': 110 # down arrow bkwd pitch (Windows)
+                    # Windows arrow key 
+                    'à': 42
+                    # 'àH': 10, # up arrow fwd pitch (Windows)
+                    # 'àK': 30, # left arrow left roll (Windows)
+                    # 'àM': 40, # right arrow right roll (Windows)
+                    # 'àP': 110 # down arrow bkwd pitch (Windows)
                     }
 
+win_arrowkey = False
 
 def getKey(settings):
     """
@@ -109,12 +112,15 @@ def indentify_key(client,key_value):
             is_armed = not is_armed
 
     elif key_value == 10:
+        print("Forward key detected")
         client.steer("forward",200) # forward
 
     elif key_value == 30:
+        print("Left key detected")
         client.steer("left",200) # left
 
     elif key_value == 40:
+        print("Right key detected")
         client.steer("right",200) # right
 
     elif key_value == 80:
@@ -127,6 +133,7 @@ def indentify_key(client,key_value):
         client.steer("down",20) # decrease_height
 
     elif key_value == 110:
+        print("Backward key detected")
         client.steer("backward",200) # backwards
 
     elif key_value == 130:
@@ -140,6 +147,28 @@ def indentify_key(client,key_value):
 
     elif key_value == 160:
         client.steer("clck",300) # yaw right
+
+    elif key_value == 42: # windows special key
+        key2 = msvcrt.getwch()
+        print("Special key detected: ", key2)
+        
+        # check for windows special key type
+        if key2 == 'H': # up arrow
+            print("Forward key detected")
+            client.steer("forward",200) # forward
+
+        elif key2 == 'K': # left arrow
+            print("Left key detected")
+            client.steer("left",200) # left
+
+        elif key2 == 'M': # right arrow'
+            print("Right key detected")
+            client.steer("right",200) # right
+
+        elif key2 == 'P': # down arrow
+            print("Backward key detected")
+            client.steer("backward",200) # backwards
+
 
 if __name__ == '__main__':
     settings = saveTerminalSettings()
@@ -157,7 +186,9 @@ if __name__ == '__main__':
 
             else:
                 client.steer("up",0)
+                print("Other key: ", key)
                 if (key == '\x03'):
+                    print("Ctrl+C detected")
                     client.disarm() # Ctrl+C break
                     break
 
