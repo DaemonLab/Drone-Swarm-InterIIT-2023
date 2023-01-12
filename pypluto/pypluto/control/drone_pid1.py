@@ -4,11 +4,11 @@ import numpy as np
 import time
 
 #Target coords
-xTarget,  yTarget, heightTarget = 640,360, 0.9  #pixel, pixel , height(m)
+xTarget,  yTarget, heightTarget = 640,360, 1.0  #pixel, pixel , height(m)
 
 #pid gains
-KPx, KPy, KPz, KPyaw = 0.05, 0.05, 500, 150
-KIx, KIy, KIz, KIyaw = 0, 0, 0, 0
+KPx, KPy, KPz, KPyaw = 0.04, 0.04, 300, 150
+KIx, KIy, KIz, KIyaw = 0.0005, 0.0005, 0, 0
 KDx, KDy, KDz, KDyaw = 0, 0, 0, 0
 
 
@@ -80,7 +80,8 @@ def pid_publisher(conn):
     """
     
     drone = Drone()
-
+    drone.trim(-10, -25, 0, 0)
+    #drone.trim(15, 15, 40, 0) #Ak
     # initialize PID controller
     # xError, yError, zError, yawError = 5, 5, 0.5, 0.3
     xError, yError, zError, yawError = 0, 0, 0.0, 0.0
@@ -98,15 +99,20 @@ def pid_publisher(conn):
     time.sleep(5)
     drone.arm()
     time.sleep(5)
-    drone.steer("up",350)
-    time.sleep(2)
+    
+
+    for i in range(86):
+        drone.steer("up",350)
+        time.sleep(0.04)
+
+    # time.sleep(2)
 
     # drone.proc.close()
     print("takeoff")
     
     timer=0
     roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 0, 0
-    drone.set_steer([roll_command, pitch_command, throttle_command, yawCommand])
+    #drone.set_steer([roll_command, pitch_command, throttle_command, yawCommand])
 
     
     start = time.time()
@@ -122,7 +128,7 @@ def pid_publisher(conn):
                 print(f"\n{delay}--Frequency checker(receiving) , received pose {pose}-")
             
             if pose is None:
-                
+                # roll_command, pitch_command, throttle_command, yawCommand = 0,0,0,0
                 now_time = time.time()
                 timeout_limit = now_time - start 
 
@@ -194,4 +200,5 @@ def pid_publisher(conn):
 
 
     drone.land()
+    time.sleep(5)
     drone.disarm()

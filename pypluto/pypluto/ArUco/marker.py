@@ -36,7 +36,6 @@ class Aruco:
 
     def detectMarkers(self,img):
         #don't we need to use a gray img here? remember to change inputs to gray_img
-        #gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         return cv2.aruco.detectMarkers(img, self.arucoDict, parameters=self.arucoParams)
         #cornersm, ids, rejected_img_points
 
@@ -112,7 +111,9 @@ def pose_publisher(connCam):  #connCam
 
     while cap.isOpened(): 
 
-        ret, image = cap.read()               
+        ret, image = cap.read()     
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
         
         #Aruco Detection , pose Estimation Block
 
@@ -122,7 +123,8 @@ def pose_publisher(connCam):  #connCam
         cv2.imshow("Image", detected_markers)
 
 
-        # print(f"\n{i}--From Marker - Pose: {pose}")
+        print(f"\n-From Marker - Pose: {pose}")
+        time.sleep(0.0)
         connCam.send(pose)
 
 

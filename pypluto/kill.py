@@ -1,4 +1,4 @@
-"Entry "
+b"Entry "
 from pypluto.pluto import *
 import time
 
