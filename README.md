@@ -1,13 +1,9 @@
 <div id="top"></div>
 
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![](https://img.shields.io/github/issues-pr-raw/DaemonLab/Drone-Swarm?color=important&style=for-the-badge)](https://github.com/DaemonLab/Drone-Swarm/pulls)
 
 # Drone Swarm Python
-This repository is being written for the Inter IIT Tech Meet 11.0 by the students of IIT Indore.
+API for controlling The Pluto 1.2 nano drone
 
 [![](https://img.shields.io/badge/License-GPLv3-blue.svg)]()
 
@@ -32,9 +28,24 @@ This repository is being written for the Inter IIT Tech Meet 11.0 by the student
 
 The API is tested with the ```PrimusV4-Pluto_1_2-1.hex``` firmware installed on Pluto Drone.
 
-If ```pip``` is not installed, install it using the following command ```..``` <br>
-
-Install the External Dependencies using the following command ```pip install -r requirements.txt```
+If ```pip3``` is not installed, install it using the following command on linux
+```shell
+$ sudo apt update
+$ sudo apt install python3-pip
+``` 
+and for Windows
+Download [get-pip.py](https://bootstrap.pypa.io/get-pip.py) using cmd prompt
+```
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+```
+To install run the following command using cmd prompt
+```
+python /path/to/get-pip.py
+```
+Install the External Dependencies using the following command 
+```
+pip install -r requirements.txt
+```
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -42,18 +53,35 @@ Install the External Dependencies using the following command ```pip install -r 
 ### Usage
 <!-- *Explain API cmds here.... might need a more detailed version like (make another section for structure)* -->
 
-
-
-
-## Manually stopping (killing) the drone
-
-Sometimes, it may happen that the python program using the API may end without deactivating (landing and/or disarming) the drone, and the drone may stay on. In that case, one can run the **kill.py** script, which will send the required commands to properly deactivate the drone. 
-
-Modify line 6 in the file as per the constructor you are using (if your IP address and port is not the default, as mentioned above in *'Prerequisites'* ).
-
+Use the ```main.py``` template file for programming the drone movement.<br> 
+or refer to the following sample program.
 ```python
+from pypluto.pluto import *
+
+if __name__ == '__main__':
     client = Drone()
+    
+    client.disarm()
+    time.sleep(5)
+    
+    client.arm()
+    time.sleep(5)
+    
+    client.trim(50, -50, 0, 0)
+    client.steer("up",400)
+    time.sleep(4)
+    
+    client.land()
+    time.sleep(4)
+    
+    client.disarm()
 ```
+
+For detailed explanation on use of various movement functions refer to [functions.md](https://github.com/DaemonLab/Drone-Swarm/blob/main/pypluto/functions.md)
+
+### Manually stopping (killing) the drone
+
+Sometimes, it may happen that the python program using the API may end without deactivating (landing and/or disarming) the drone, and the drone may stay on. In that case, one can run the ```kill.py``` script, which will send the required commands to properly deactivate the drone. 
 
 ## Roadmap
 
