@@ -17,9 +17,9 @@ class Drone():
         self.proc = Process(target=self.out_stream_obj.getData, args=(child_conn,))
         self.proc.start()
 
-        self.DRONEIP = DroneIP
-        self.DRONEPORT = DronePort
-        self.conn = Connection(self.DRONEIP, self.DRONEPORT).connect()
+        # self.DRONEIP = DroneIP
+        # self.DRONEPORT = DronePort
+        # self.conn = Connection(self.DRONEIP, self.DRONEPORT).connect()
         self.move_cmd = Move()
         self.msg = Message()
         
@@ -64,8 +64,8 @@ class Drone():
     #     self.sendData(self.msg.set_raw_rc(data) , "LAND THROTTLE")
     #     self.sendData(self.move_cmd.land() , "LAND")
     
-    # def backFlip(self):
-    #     self.sendData(self.move_cmd.backFlip() , "BACKFLIP")
+    def backflip(self):
+        self.sendData(self.move_cmd.backflip() , "BACKFLIP")
     
     # def takeoff(self):
     #     self.sendData(self.move_cmd.takeoff() , "BACKFLIP")
@@ -75,9 +75,9 @@ class Drone():
         
     def sendData(self, data:bytes, err:str):
         global parent_conn,child_conn
-        if(self.proc.is_alive()):
-            print(data)
-            parent_conn.send(data)
-        else:
-            pass
+        # if(self.proc.is_alive()):
+        print(data)
+        parent_conn.send(data)
+        # else:
+        #     pass
 
