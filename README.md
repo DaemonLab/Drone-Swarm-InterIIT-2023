@@ -28,12 +28,12 @@ API for controlling The Pluto 1.2 nano drone
 
 The API is tested with the ```PrimusV4-Pluto_1_2-1.hex``` firmware installed on Pluto Drone.
 
-If ```pip3``` is not installed, install it using the following command on linux
+If ```pip3``` is not installed, install it using the following command on **linux**
 ```shell
 $ sudo apt update
 $ sudo apt install python3-pip
 ``` 
-and for Windows
+and for **Windows**
 Download [get-pip.py](https://bootstrap.pypa.io/get-pip.py) using cmd prompt
 ```
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
@@ -77,7 +77,9 @@ if __name__ == '__main__':
     client.disarm()
 ```
 
-For detailed explanation on use of various movement functions refer to [functions.md](https://github.com/DaemonLab/Drone-Swarm/blob/main/pypluto/functions.md)
+For detailed explanation on use of various movement functions refer to [functions.md](https://github.com/DaemonLab/Drone-Swarm/blob/main/docs/functions.md) <br>
+
+User can also control the drone from keyboard by running the ```keyboard.py``` file in terminal / command prompt. Instructions for control via keyboard can be found in [keyboard_control.md](https://github.com/DaemonLab/Drone-Swarm/blob/main/docs/keyboard_control.md)
 
 ### Manually stopping (killing) the drone
 
