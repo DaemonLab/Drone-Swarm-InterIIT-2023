@@ -3,6 +3,7 @@ from pypluto.Comm.server import Connection
 from pypluto.Comm.msg import Message
 import numpy as np
 import time
+import struct
 
 msg_rc = b'$M<\x10\xc8\xdc\x05\xdc\x05\xdc\x05\xdc\x05\xb0\x04\xe8\x03\xdc\x05\xb0\x04\xea'      #put message after setting 1500,1500,1200,1500,1500,1500,1500,1500
 #msg_rc = b'$M<\x10\xc8\xdc\x05\xdc\x05\xe8\x03\xa4\x06\xdc\x05\xe8\x03\xdc\x05\xdc\x05\xa3'
@@ -23,7 +24,6 @@ msg_ACC_CALIB = ""      #put the ACC_CALIB send msg here
 msg_MAG_CALIB = ""      #put the MAG_CALIB send msg here
 msg_SET_TRIM = ""      #put the SET_TRIM send msg here
 data = []
-doer = True
 
 t_set_cmd = time.time()
 
@@ -48,15 +48,14 @@ class out_stream():
         global flag_ACC_CALIB
         global flag_MAG_CALIB
         global flag_SET_TRIM
-        global doer
+
         while(True):
             try:
-                if doer:     #Might want a do-while loop instead
-                    if child_conn.poll():
-                        doer = False
+                if not child_conn.poll():     #Might want a do-while loop instead
                     #print(msg_rc[9],msg_rc[10])
+                    print(struct.unpack('<3c2B8H', msg_rc[:-1]))
                     self.conn.write(msg_rc)  # changes 00;07
-                    time.sleep(0.1)
+                    time.sleep(0.03)
                     if flag_set_cmd:
                         self.conn.write(msg_set_cmd)
                         
@@ -78,7 +77,6 @@ class out_stream():
                         flag_MAG_CALIB = False
                 else:
                     self.parseData(child_conn)
-                    doer = True
                     # self.conn.write(msg_rc) #changes 00:07
 
             except KeyboardInterrupt:

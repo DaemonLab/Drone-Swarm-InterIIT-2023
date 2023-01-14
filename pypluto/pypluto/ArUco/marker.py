@@ -36,10 +36,11 @@ class Aruco:
 
     def detectMarkers(self,img):
         #don't we need to use a gray img here? remember to change inputs to gray_img
+        #gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         return cv2.aruco.detectMarkers(img, self.arucoDict, parameters=self.arucoParams)
         #cornersm, ids, rejected_img_points
 
-    def get_pose(self, corners, ids, image, desiredVec, display=True):
+    def get_pose(self, corners, ids, image, desiredVec, display=False):
 
         is_detected = False
         pose = None
@@ -54,7 +55,7 @@ class Aruco:
                 except cv2.error:
                     print("Pose Est error")
                     return pose, is_detected, image
-
+                
                 corners = markerCorner.reshape((4, 2))
                 (topLeft, topRight, bottomRight, bottomLeft) = corners
                 
@@ -73,6 +74,7 @@ class Aruco:
 
                 pose = np.array([cX,cY, drone_height,yaw]) 
                 is_detected = True
+
                 if display:
                     cv2.line(image, topLeft, topRight, (0, 255, 0), 2)
                     cv2.line(image, topRight, bottomRight, (0, 255, 0), 2)
@@ -111,20 +113,17 @@ def pose_publisher(connCam):  #connCam
 
     while cap.isOpened(): 
 
-        ret, image = cap.read()     
+        ret, image = cap.read()               
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-        
         #Aruco Detection , pose Estimation Block
 
         corners, ids, rejected = aruco_obj.detectMarkers(image)
         # detected_markers = (corners, ids, image, [550,192])
         pose, is_detected, detected_markers = aruco_obj.get_pose(corners, ids, image, [640,360], display=True)
-        cv2.imshow("Image", detected_markers)
+        #cv2.imshow("Image", detected_markers)
 
 
-        print(f"\n-From Marker - Pose: {pose}")
-        time.sleep(0.0)
+        # print(f"\n{i}--From Marker - Pose: {pose}")
         connCam.send(pose)
 
 

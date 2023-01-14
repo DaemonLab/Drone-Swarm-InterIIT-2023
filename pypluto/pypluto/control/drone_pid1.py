@@ -7,8 +7,8 @@ import time
 xTarget,  yTarget, heightTarget = 640,360, 1.0  #pixel, pixel , height(m)
 
 #pid gains
-KPx, KPy, KPz, KPyaw = 0.04, 0.04, 300, 150
-KIx, KIy, KIz, KIyaw = 0.0005, 0.0005, 0, 0
+KPx, KPy, KPz, KPyaw = 0.05, 0.05, 400, 1
+KIx, KIy, KIz, KIyaw = 0, 0, 0, 0
 KDx, KDy, KDz, KDyaw = 0, 0, 0, 0
 
 
@@ -19,7 +19,8 @@ YAW_TARGET = 1.5708
 # Radius of target threshold
 THRESHOLD_R = 5
 
-
+prev_pose_1 = [[0,0,0,0],time.time()]
+prev_pose_2 = [[0,0,0,0],time.time()]
 
 def pid(pose, target, Err, ErrI):
     """
@@ -72,6 +73,8 @@ def pid(pose, target, Err, ErrI):
 
 
 def pid_publisher(conn):
+    global prev_pose_1
+    global prev_pose_2
     """
     Function to recieve data from pid file and 
     using drone_api velocity fns 
@@ -80,8 +83,7 @@ def pid_publisher(conn):
     """
     
     drone = Drone()
-    drone.trim(-10, -25, 0, 0)
-    #drone.trim(15, 15, 40, 0) #Ak
+    #throttle_test = 200
     # initialize PID controller
     # xError, yError, zError, yawError = 5, 5, 0.5, 0.3
     xError, yError, zError, yawError = 0, 0, 0.0, 0.0
@@ -100,19 +102,22 @@ def pid_publisher(conn):
     drone.arm()
     time.sleep(5)
     
+    drone.trim(0,0,50,0)
+    drone.takeoff()
+    # drone.backFlip()
+    time.sleep(2)
 
-    for i in range(86):
-        drone.steer("up",350)
-        time.sleep(0.04)
-
-    # time.sleep(2)
-
+    drone.set_steer([0, 0, 220, 0])
+    time.sleep(1)
+    
+    #drone.trim(0, 0, 0, 0)
+    
     # drone.proc.close()
     print("takeoff")
     
     timer=0
-    roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 0, 0
-    #drone.set_steer([roll_command, pitch_command, throttle_command, yawCommand])
+    roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 200, 0
+    drone.set_steer([roll_command, pitch_command, throttle_command, yawCommand])
 
     
     start = time.time()
@@ -126,22 +131,12 @@ def pid_publisher(conn):
             if (conn.poll()):                
                 pose = conn.recv()
                 print(f"\n{delay}--Frequency checker(receiving) , received pose {pose}-")
-            
-            if pose is None:
-                # roll_command, pitch_command, throttle_command, yawCommand = 0,0,0,0
-                now_time = time.time()
-                timeout_limit = now_time - start 
-
-                # if timer>=1000:
-                if timeout_limit > 5 : 
-                    print("Aruco not detected ,landing")
-                    drone.land()
-                    break
-
-                print(f"\ntimer :{timer}")
                 
           
             if pose is not None:
+                if not now==prev_pose_1[1]:
+                    prev_pose_2 = prev_pose_1
+                    prev_pose_1 = [pose, now]
                 start = time.time()
 
                 print(f"Pose is {pose}")
@@ -154,11 +149,39 @@ def pid_publisher(conn):
                     print(f"Pose: {pose}")
                     print("Target Reached.")
                     
-                    
+            if pose is None:
+                
+                now_time = time.time()
+                timeout_limit = now_time - start 
+                
+                x_temp = ((prev_pose_2[0][0]-prev_pose_1[0][0])/(prev_pose_2[1]-prev_pose_1[1])) * (now_time-prev_pose_1[1]) * (-1)
+                y_temp = ((prev_pose_2[0][1]-prev_pose_1[0][1])/(prev_pose_2[1]-prev_pose_1[1])) * (now_time-prev_pose_1[1]) * (-1)
+                z_temp = prev_pose_1[0][2]
+                yaw_temp = ((prev_pose_2[0][3]-prev_pose_1[0][3])/(prev_pose_2[1]-prev_pose_1[1])) * (now_time-prev_pose_1[1]) * (-1)
+                pose = [x_temp,y_temp,z_temp,yaw_temp]
+                
+                
+
+                # if timer>=1000:
+                if timeout_limit > 5 : 
+                    print("Aruco not detected ,landing")
+                    drone.land()
+                    break
+                
+                path.append(pose)
+                timer = 0
+                                                                                         
+                roll_command, pitch_command, throttle_command, yawCommand, Err, ErrI = pid(pose, [xTarget,  yTarget, heightTarget], Err, ErrI)
+                
+                if np.sqrt((xTarget-pose[0])**2+(yTarget-pose[1])**2)<THRESHOLD_R**2:
+                    print(f"Pose: {pose}")
+                    print("Target Reached.")
+                
+                print(f"\ntimer :{timer}")
 
             #-----------------------------
             #prev cmd if pose is none
-
+            #throttle_command = throttle_test
             drone.set_steer([roll_command, pitch_command, throttle_command, yawCommand])
             print("ROLL:", roll_command, " | ", "PITCH:", pitch_command, " | " , "THROTTLE:", throttle_command, " | ", "YAW:", yawCommand, " |", )
 
@@ -166,7 +189,7 @@ def pid_publisher(conn):
             '''Very impt time.sleep '''
             #( if removed , it will not let you sleep)'''
             #0.03
-            time.sleep(0.02)
+            time.sleep(0.03)
             '''this sleep adjusts the running of this files while loop, 
             so that the rate of receiving from marker files is almost matched 
             to that of this file sending commands to drone using api '''
@@ -200,5 +223,4 @@ def pid_publisher(conn):
 
 
     drone.land()
-    time.sleep(5)
     drone.disarm()

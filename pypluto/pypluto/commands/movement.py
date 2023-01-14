@@ -39,15 +39,15 @@ class Move():
     #     parsed=self.msg.set_command(data)
     #     return parsed
 
-    # def land(self):
-    #     data=[2]
-    #     parsed=self.msg.set_command(data)
-    #     return parsed
+    def land(self):
+        data=[2]
+        parsed=self.msg.set_command(data)
+        return parsed
 
-    # def backFlip(self):
-    #     data=[3]
-    #     parsed=self.msg.set_command(data)
-    #     return parsed
+    def backflip(self):
+        data=[3]
+        parsed=self.msg.set_command(data)
+        return parsed
 
     # def frontFlip(self):
     #     data=[4]
@@ -65,16 +65,16 @@ class Move():
     #     return 
         
     def takeoff(self):
-        RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE+300, self.RC_YAW, 1500, 1000, 1500, 1500
+        RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE+500, self.RC_YAW, 1500, 1000, 1500, 1500
         data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
         parsed = self.msg.set_raw_rc(data)
         return parsed
     
-    def land(self):
-        RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE-300, self.RC_YAW, 1500, 1000, 1500, 1500
-        data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
-        parsed = self.msg.set_raw_rc(data)
-        return parsed
+    # def land(self):
+    #     RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE-200, self.RC_YAW, 1500, 1000, 1500, 1500
+    #     data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+    #     parsed = self.msg.set_raw_rc(data)
+    #     return parsed
 
     def trim(self, roll, pitch, throttle, yaw):
         self.RC_ROLL += roll
