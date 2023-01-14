@@ -1,13 +1,15 @@
 from pypluto.Comm.server import Connection
 from pypluto.Comm.msg import Message
 import numpy as np
+import time
 
 class Move():
 
     def __init__(self):
         self.msg = Message()
+        self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE, self.RC_YAW = 1500, 1500, 1500, 1500
+        
 
-    '''
     def arming(self, arm: bool):
         """
         Parses the arm and disarm commands.
@@ -31,60 +33,56 @@ class Move():
 
         parsed = self.msg.set_raw_rc(data)
         return parsed
-    '''
     
-    def arm(self):
-        RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1000, 1500, 1500, 1500, 1500, 1500
-        data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
-        parsed = self.msg.set_raw_rc(data)
-        return parsed
-    
-    def disarm(self):
-        RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1300, 1500, 1500, 1500, 1500, 1200
-        data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
-        parsed = self.msg.set_raw_rc(data)
-        return parsed
-    
-    def box_arm(self):
-        RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500
-        data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
-        parsed = self.msg.set_raw_rc(data)
-        return parsed
-    
-    
-    def takeoff(self):
-        self.disarm()
-        self.box_arm()
-        data=[1]
+    # def takeoff(self):
+    #     data=[1]
+    #     parsed=self.msg.set_command(data)
+    #     return parsed
+
+    def land(self):
+        data=[2]
         parsed=self.msg.set_command(data)
         return parsed
 
-    def land(self):
-         data=[2]
-         parsed=self.msg.set_command(data)
-         return parsed
-
-    def backFlip(self):
+    def backflip(self):
         data=[3]
         parsed=self.msg.set_command(data)
         return parsed
 
-    def frontFlip(self):
-         data=[4]
-         parsed=self.msg.set_command(data)
-         return parsed
+    # def frontFlip(self):
+    #     data=[4]
+    #     parsed=self.msg.set_command(data)
+    #     return parsed
 
-    def rightFlip(self):
-         data=[5]
-         parsed=self.msg.set_command(data)
-         return parsed
+    # def rightFlip(self):
+    #     data=[5]
+    #     parsed=self.msg.set_command(data)
+    #     return parsed
 
-    def leftFlip(self):
-         data=[6]
-         parsed=self.msg.set_command(data)
-         return parsed
-      
-     
+    # def leftFlip(self):
+    #     data=[6]
+    #     parsed=self.msg.set_command(data)
+    #     return 
+        
+    def takeoff(self):
+        RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE+500, self.RC_YAW, 1500, 1000, 1500, 1500
+        data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+        parsed = self.msg.set_raw_rc(data)
+        return parsed
+    
+    # def land(self):
+    #     RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE-200, self.RC_YAW, 1500, 1000, 1500, 1500
+    #     data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+    #     parsed = self.msg.set_raw_rc(data)
+    #     return parsed
+
+    def trim(self, roll, pitch, throttle, yaw):
+        self.RC_ROLL += roll
+        self.RC_PITCH += pitch
+        self.RC_THROTTLE += throttle
+        self.RC_YAW += yaw
+
+
     
     def steer_cmd(self, direction:str, magnitude:int=100):
         """
@@ -93,7 +91,7 @@ class Move():
         Parameters
         ----------
         direction : str
-            Valid inputs - "forward", "backward", "left", "right", "up", "down", "pitch", "roll", "throttle" and "yaw".
+            Valid inputs - "forward", "backward", "left", "right", "up", "down".
         magnitude : int
             Magnitude over which the drone steers, -600<magnitude<600
 
@@ -103,16 +101,16 @@ class Move():
             The parsed data to be sent to the drone.
         """
 
-        center = np.array([1500, 1500, 1500, 1500])
+        center = np.array([self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE, self.RC_YAW])
 
         RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1500, 1500
     
         if magnitude + 1500 > 2100:
             print("Clipping magnitude to 2100")
-            magnitude = 2100
+            magnitude = 600
         if magnitude + 1500 < 900:
             print("Clipping magnitude to 900")
-            magnitude = 900
+            magnitude = -600
 
         change = {
             "forward": np.array([0, magnitude, 0, 0]),
@@ -123,13 +121,40 @@ class Move():
             "down": np.array([0, 0, -magnitude, 0]),
             "clck": np.array([0, 0, 0, magnitude]),
             "anticlck": np.array([0, 0, 0, -magnitude]),
-            "roll": np.array([magnitude, 0, 0, 0]),
-            "pitch": np.array([0, magnitude, 0, 0]),
-            "throttle": np.array([0, 0, magnitude, 0]),
-            "yaw": np.array([0, 0, 0, magnitude])
         }
     
         RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW,  = center + change[direction]
+        data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+        parsed = self.msg.set_raw_rc(data)
+        return parsed
+
+    def set_steer_data(self, magnitude):
+        """
+        Parses the steer commands.
+
+        Parameters
+        ----------
+        magnitude : array-like
+            Magnitude of roll, pitch, throttle, and yaw commands -600<magnitude<600
+
+        Returns
+        -------
+        parsed : bytes
+            The parsed data to be sent to the drone.
+        """
+
+        center = np.array([self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE, self.RC_YAW])
+
+        RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1500, 1500
+        for i in range(4):
+            if magnitude[i] + 1500 > 2100:
+                print("Clipping magnitude to 2100")
+                magnitude[i] = 600
+            if magnitude[i] + 1500 < 900:
+                print("Clipping magnitude to 900")
+                magnitude[i] = -600
+    
+        RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW,  = center + np.array(magnitude)
         data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
         parsed = self.msg.set_raw_rc(data)
         return parsed

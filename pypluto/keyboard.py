@@ -1,7 +1,4 @@
-"Entry "
-from pypluto.pluto import Drone
-from pypluto import *
-import time
+from pypluto.pluto import *
 
 #import threading
 
@@ -13,13 +10,10 @@ else:
     import termios
     import tty
 
+is_armed = False
 msg = """
     Control Your Drone!
     ---------------------------
-    Moving around:
-    u    i    o
-    j    k    l
-    n    m    ,
     spacebar : arm or disarm
     w : increase height
     s : decrease height
@@ -27,7 +21,6 @@ msg = """
     e : land
     a : yaw left
     d : yaw right
-    t : auto pilot on/off
     Up arrow : go forward
     Down arrow : go backward
     Left arrow : go left
@@ -54,10 +47,16 @@ keyboard_control={  #dictionary containing the key pressed abd value associated 
                     '1' : 25,
                     '2' : 30,
                     '3' : 35,
-                    '4' : 45}
+                    '4' : 45,
+                    # Windows arrow key 
+                    'à': 42
+                    # 'àH': 10, # up arrow fwd pitch (Windows)
+                    # 'àK': 30, # left arrow left roll (Windows)
+                    # 'àM': 40, # right arrow right roll (Windows)
+                    # 'àP': 110 # down arrow bkwd pitch (Windows)
+                    }
 
-    #control_to_change_value=('u','o',',','z','c')
-
+win_arrowkey = False
 
 def getKey(settings):
     """
@@ -71,19 +70,20 @@ def getKey(settings):
     if sys.platform == 'win32':
         # getwch() returns a string on Windows
         key = msvcrt.getwch()
-    
-    tty.setraw(sys.stdin.fileno())
-    rlist, _, _ = select([sys.stdin], [], [], 0.1)
-    if rlist:
-        key = sys.stdin.read(1)
-        if (key == '\x1b'): # \x1b is Escape key
-            key = sys.stdin.read(2)
-        sys.stdin.flush()
+        print("Key sent from Windows: '", key, "'")
     else:
-        key = ''
+        tty.setraw(sys.stdin.fileno())
+        rlist, _, _ = select([sys.stdin], [], [], 0.1)
+        if rlist:
+            key = sys.stdin.read(1)
+            if (key == '\x1b'): # \x1b is Escape key
+                key = sys.stdin.read(2)
+            sys.stdin.flush()
+        else:
+            key = ''
 
-    termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
-    print(key)
+        termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
+        print("Key sent from Linux: ", key)
     return key
     
 def saveTerminalSettings():
@@ -97,60 +97,99 @@ def restoreTerminalSettings(old_settings):
     termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
 
 def indentify_key(client,key_value):
-
-    # cmd = MsgType()
+    """
+    Function to identify the key pressed and call
+    the corresponding command function defined in movement.py
+    and pluto.py
+    """
+    global is_armed 
     if key_value == 70:
-        # if(cmd.rcAUX4 == 1500):
-        #     disarm()
-        # else:
-        client.arm()
+        if is_armed:
+            client.disarm()
+            is_armed = not is_armed
+        else:
+            client.arm()
+            is_armed = not is_armed
+
     elif key_value == 10:
-        client.forward()
+        print("Forward key detected")
+        client.steer("forward",200) # forward
+
     elif key_value == 30:
-        client.left()
+        print("Left key detected")
+        client.steer("left",200) # left
+
     elif key_value == 40:
-        client.right()
+        print("Right key detected")
+        client.steer("right",200) # right
+
     elif key_value == 80:
         client.reset()
-    # elif key_value == 90:
-    #     if(cmd.isAutoPilotOn == 1):
-    #         cmd.isAutoPilotOn = 0
-    #     else:
-    #         cmd.isAutoPilotOn = 1
+
     elif key_value == 50:
-        client.increase_height()
+        client.steer("up",400) # increase height
+
     elif key_value == 60:
-        client.decrease_height()
+        client.steer("down",20) # decrease_height
+
     elif key_value == 110:
-        client.backward()
+        print("Backward key detected")
+        client.steer("backward",200) # backwards
+
     elif key_value == 130:
-        client.takeOff()
+        client.takeoff()
+
     elif key_value == 140:
         client.land()
+
     elif key_value == 150:
-        client.anticlockwise()
+        client.steer("anticlck",300) # yaw left
+
     elif key_value == 160:
-        client.clockwise()
+        client.steer("clck",300) # yaw right
+
+    elif key_value == 42: # windows special key
+        key2 = msvcrt.getwch()
+        print("Special key detected: ", key2)
+        
+        # check for windows special key type
+        if key2 == 'H': # up arrow
+            print("Forward key detected")
+            client.steer("forward",200) # forward
+
+        elif key2 == 'K': # left arrow
+            print("Left key detected")
+            client.steer("left",200) # left
+
+        elif key2 == 'M': # right arrow'
+            print("Right key detected")
+            client.steer("right",200) # right
+
+        elif key2 == 'P': # down arrow
+            print("Backward key detected")
+            client.steer("backward",200) # backwards
+
 
 if __name__ == '__main__':
     settings = saveTerminalSettings()
     
     client = Drone()
+    client.disarm()
 
     try:
         print(msg)
-        while(1):
+        while(True):
             key = getKey(settings)
-            print("YO" , key , "YO", sep='')
             if key in keyboard_control.keys():
                 print("executed" , keyboard_control[key] , "]]]")
                 indentify_key(client,keyboard_control[key])
-                # if (keyboard_control[key] == 70):
-                #     client.arm()
-                    #time.sleep(2)
 
             else:
-                if (key == '\x03'): # Ctrl+C break
+                client.steer("up",0)
+                print("Other key: ", key)
+                if (key == '\x03'):
+                    print("Ctrl+C detected")
+                    client.disarm() # Ctrl+C break
                     break
             client.getIMU()
 
