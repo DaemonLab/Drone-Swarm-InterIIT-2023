@@ -29,22 +29,24 @@ class Move():
         if arm:
             data[-1] = 1500
         else:
-            data[-1] = 901
+            data[-1] = 1200
+            data[2]=1300
 
         parsed = self.msg.set_raw_rc(data)
         return parsed
     
-    # def takeoff(self):
-    #     data=[1]
-    #     parsed=self.msg.set_command(data)
-    #     return parsed
-
+    def box_arm(self):
+        RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1500, 1500, 1500, 1500, 1500, 1500
+        data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+        parsed = self.msg.set_raw_rc(data)
+        return parsed
+        
     def land(self):
         data=[2]
         parsed=self.msg.set_command(data)
         return parsed
 
-    def backflip(self):
+    def flip(self):
         data=[3]
         parsed=self.msg.set_command(data)
         return parsed
@@ -64,18 +66,12 @@ class Move():
     #     parsed=self.msg.set_command(data)
     #     return 
         
-    def takeoff(self):
-        RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE+500, self.RC_YAW, 1500, 1000, 1500, 1500
-        data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
-        parsed = self.msg.set_raw_rc(data)
+   def takeoff(self):
+        data=[1]
+        parsed=self.msg.set_command(data)
         return parsed
     
-    # def land(self):
-    #     RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE-200, self.RC_YAW, 1500, 1000, 1500, 1500
-    #     data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
-    #     parsed = self.msg.set_raw_rc(data)
-    #     return parsed
-
+   
     def trim(self, roll, pitch, throttle, yaw):
         self.RC_ROLL += roll
         self.RC_PITCH += pitch
@@ -123,8 +119,8 @@ class Move():
             "anticlck": np.array([0, 0, 0, -magnitude]),
         }
     
-        RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW,  = center + change[direction]
-        data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
+        self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE, self.RC_YAW,  = center + change[direction]
+        data = [self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE, self.RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
         parsed = self.msg.set_raw_rc(data)
         return parsed
 
