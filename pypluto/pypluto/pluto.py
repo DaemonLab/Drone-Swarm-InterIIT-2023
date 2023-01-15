@@ -27,9 +27,11 @@ class Drone():
 
     def arm(self):
         self.sendData(self.move_cmd.arming(True), "ARM")   
+        time.sleep(1)
         
     def disarm(self):
         self.sendData(self.move_cmd.arming(False), "DISARM")
+        time.sleep(1)
 
     def steer(self, direction:str, magnitude:int=100):
         self.sendData(self.move_cmd.steer_cmd(direction, magnitude), f"STEER {direction}")
@@ -40,9 +42,8 @@ class Drone():
         self.sendData(self.move_cmd.set_steer_data(magnitude), f"Sending {magnitude}")
     
     def takeoff(self):
-        """
-        TRIM values within -50 to 50
-        """
+        self.sendData(self.move_cmd.box_arm(), "BOX_ARM")
+        time.sleep(1)
         self.sendData(self.move_cmd.takeoff() , "THROTTLE")
 
     
@@ -51,27 +52,12 @@ class Drone():
 
     def trim(self, roll, pitch, throttle, yaw):
         self.move_cmd.trim(roll, pitch, throttle, yaw)
-#changes 00:07
-    # def takeoff(self):
-    #     RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1800, 1500, 1500, 1000, 1500, 1500
-    #     data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
-    #     self.sendData(self.msg.set_raw_rc(data) , "TAKEOFF THROTTLE")
-    #     self.sendData(self.move_cmd.takeoff() , "TAKEOFF")
+
     
-    # def land(self):
-    #     RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = 1500, 1500, 1200, 1500, 1500, 1000, 1500, 1500
-    #     data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
-    #     self.sendData(self.msg.set_raw_rc(data) , "LAND THROTTLE")
-    #     self.sendData(self.move_cmd.land() , "LAND")
+    def flip(self):
+        self.sendData(self.move_cmd.flip() , "FLIP")
     
-    def backflip(self):
-        self.sendData(self.move_cmd.backflip() , "BACKFLIP")
-    
-    # def takeoff(self):
-    #     self.sendData(self.move_cmd.takeoff() , "BACKFLIP")
-        
-    # def land(self):
-    #     self.sendData(self.move_cmd.land() , "BACKFLIP")
+  
         
     def sendData(self, data:bytes, err:str):
         global parent_conn,child_conn
