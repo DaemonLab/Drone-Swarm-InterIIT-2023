@@ -8,10 +8,10 @@ import time
 import matplotlib.pyplot as plt
 
 #Target coords
-xTarget,  yTarget, heightTarget = 640,360, 1.2  #pixel, pixel , height(m)
+xTarget,  yTarget, heightTarget = 640,360, 1.0  #pixel, pixel , height(m)
 # 550,192
 #pid gains
-KPx, KPy, KPz, KPyaw = 0.10, 0.15, 200 , 50
+KPx, KPy, KPz, KPyaw = 0.25, 0.25, 200 , 70
 KIx, KIy, KIz, KIyaw = 0, 0, 0, 0
 KDx, KDy, KDz, KDyaw = 0, 0, 0, 0
 
@@ -100,19 +100,18 @@ def receiver_at_drone1(conn):
     drone.connect()
     drone.trim(-7,5,0,0)
     drone.disarm()
-    drone.arm()
+    # drone.arm()
     # drone.trim(5,18,0,0) #akshit drone
 
     # drone.trim(-15,-5,0,0) #iit ddrone.trim(-15,-10,0,0)rone
     # drone.trim(-5,2,0,0)
 
-    # drone.takeoff()
-    drone.speedz(300,3)
-    # drone.speedz(0,5)
+    drone.takeoff()
+    # drone.throttle_speed(300,3)
     print("takeoff")
 
     timer=0
-    roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 30, 0
+    roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 0, 0
 
     start = time.time()
     
@@ -133,7 +132,7 @@ def receiver_at_drone1(conn):
                 now_time = time.time()
                 timeout_limit = now_time - start 
 
-                roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 0, 0
+                roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 20, 0
 
                 # if timer>=1000:
                 if timeout_limit > 5 : 
@@ -162,10 +161,10 @@ def receiver_at_drone1(conn):
             #-----------------------------
             #prev cmd if pose is none
 
-            drone.speedz(throttle_command)
-            drone.speedx(roll_command)
-            drone.speedy(pitch_command)
-            drone.rotate(yawCommand)
+            drone.throttle_speed(20)
+            drone.roll_speed(roll_command)
+            drone.pitch_speed(pitch_command)
+            drone.yaw_speed(yawCommand)
 
             '''----------------------------'''
             '''Very impt time.sleep '''
