@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 xTarget,  yTarget, heightTarget = 640,360, 1.0  #pixel, pixel , height(m)
 # 550,192
 #pid gains
-KPx, KPy, KPz, KPyaw = 0.25, 0.25, 200 , 70
+KPx, KPy, KPz, KPyaw = 0.225, 0.18, 200 , 70
 KIx, KIy, KIz, KIyaw = 0, 0, 0, 0
 KDx, KDy, KDz, KDyaw = 0, 0, 0, 0
 
@@ -132,7 +132,7 @@ def receiver_at_drone1(conn):
                 now_time = time.time()
                 timeout_limit = now_time - start 
 
-                roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 20, 0
+                roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 25, 0
 
                 # if timer>=1000:
                 if timeout_limit > 5 : 
@@ -161,7 +161,7 @@ def receiver_at_drone1(conn):
             #-----------------------------
             #prev cmd if pose is none
 
-            drone.throttle_speed(20)
+            drone.throttle_speed(25)
             drone.roll_speed(roll_command)
             drone.pitch_speed(pitch_command)
             drone.yaw_speed(yawCommand)
@@ -169,7 +169,7 @@ def receiver_at_drone1(conn):
             '''----------------------------'''
             '''Very impt time.sleep '''
             #( if removed , it will not let you sleep)'''
-            time.sleep(0.03)
+            time.sleep(0.05)
             '''this sleep adjusts the running of this files while loop, 
             so that the rate of receiving from marker files is almost matched 
             to that of this file sending commands to drone using api '''
