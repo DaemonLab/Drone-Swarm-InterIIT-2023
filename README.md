@@ -153,6 +153,7 @@ Install the External Dependencies using the following command
 pip install -r requirements.txt
 ```
 <div id="Usg"></div>
+
 ### 5. Usage
 
 #### a. Pre-Programmed Execution
@@ -173,7 +174,6 @@ if __name__ == '__main__':
 	
 	#drone plan execution
 	drone.trim(-2,2,0,0)
-	drone.box_arm()
 	drone.takeoff()
 	drone.throttle_speed(0,3)
 	
