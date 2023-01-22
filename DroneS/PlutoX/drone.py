@@ -180,7 +180,6 @@ class pluto:
 
 
     def takeoff(self):
-        self.box_arm()
         cmd=[1]
         self.create_sendMSPpacket(MSP_SET_COMMAND,cmd)
         self.throttle_speed(0,3)
