@@ -100,7 +100,7 @@ def receiver_at_drone1(conn):
     drone.connect()
     drone.trim(-7,5,0,0)
     drone.disarm()
-    # drone.arm()
+    drone.box_arm()
     # drone.trim(5,18,0,0) #akshit drone
 
     # drone.trim(-15,-5,0,0) #iit ddrone.trim(-15,-10,0,0)rone
