@@ -1,4 +1,4 @@
-from PlutoX import pluto
+from pypluto import pluto
 import time
 drone=pluto()
 drone.connect() 
