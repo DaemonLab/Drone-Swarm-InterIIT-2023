@@ -1,8 +1,6 @@
 
 <div id="top"></div>
 
-[![Issues][issues-shield]][issues-url]
-
 # Drone Swarm Python
 API for controlling The Pluto 1.2 nano drone
 
