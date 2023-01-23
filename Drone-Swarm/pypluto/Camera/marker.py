@@ -110,7 +110,7 @@ class Aruco:
         # print(f"corners, {corners} IDs: {ids}")
         
         if len(corners) > 0:
-            print("detected")
+            # print("detected")
             
             for (markerCorner, markerID) in zip(corners, ids):
                 # try:

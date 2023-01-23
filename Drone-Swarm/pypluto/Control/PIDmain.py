@@ -20,7 +20,7 @@ xTarget,  yTarget, heightTarget = target_array[0][0],target_array[0][1], 1.0  #p
 #pid gains
 KPx, KPy, KPz, KPyaw = 0.3, 0.1, 200 , 70
 KIx, KIy, KIz, KIyaw = 0, 0, 0, 0
-KDx, KDy, KDz, KDyaw = 5, 5, 0, 0
+KDx, KDy, KDz, KDyaw = 3, 5, 0, 0
 
 
 #currently global , 
@@ -165,6 +165,15 @@ def receiver_at_drone1(conn):
                                                                                          
                 roll_command, pitch_command, throttle_command, yawCommand, Err, ErrI = pid(pose, [xTarget,  yTarget, heightTarget], Err, ErrI)
                 
+                if (roll_command>100):
+                    roll_command=100
+                elif (roll_command<-100):
+                    roll_command=-100
+                if (pitch_command>100):
+                    pitch_command=100
+                elif (pitch_command<-100):
+                    pitch_command=-100
+
                 if np.sqrt((xTarget-pose[0])**2+(yTarget-pose[1])**2)<100:
                     print(f"Pose: {pose}")
                     print("Target Reached.")
@@ -191,10 +200,6 @@ def receiver_at_drone1(conn):
                 # ax.set_xlabel("X")
             #-----------------------------
             #prev cmd if pose is none
-            if (roll_command>150):
-                roll_command=150
-            if (pitch_command>150):
-                pitch_command=150
 
             drone.throttle_speed(10)
             drone.roll_speed(roll_command)
@@ -204,7 +209,7 @@ def receiver_at_drone1(conn):
             '''----------------------------'''
             '''Very impt time.sleep '''
             #( if removed , it will not let you sleep)'''
-            time.sleep(0.03)
+            time.sleep(0.04)
             '''this sleep adjusts the running of this files while loop, 
             so that the rate of receiving from marker files is almost matched 
             to that of this file sending commands to drone using api '''
