@@ -136,6 +136,7 @@ D. Record a video and make the final submission similarly as the previous one.
 <!-- *Put setup instructions here.* -->
 
 The API is tested with the ```PrimusV4-Pluto_1_2-1.hex``` firmware installed on Pluto Drone.
+Ensure that git is installed on the system.
 
 If ```pip3``` is not installed, install it using the following command in Terminal
 
@@ -184,19 +185,19 @@ $ deactivate
 ## Setting up pypluto package in Linux
 
 ```
-$ git clone repo_name
+$ git clone https://github.com/DaemonLab/Drone-Swarm/edit/Drone_Swarm_Task_1/
 $ cd pypluto
-$ python3 install setup.py
-$ pip install -e . ( don't know exactly)
-$ need to check after this
 ```
-
+Install the External Dependencies using the following command 
+```
+pip install -r requirements.txt
+```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
 <div id="GetSW"></div>
-
+**Note: For MacOS, follow the same procedure as Linux**<br>
 ## Setting up pypluto package in Windows
 Download [get-pip.py](https://bootstrap.pypa.io/get-pip.py) using cmd prompt
 ```
@@ -206,6 +207,12 @@ To install run the following command using cmd prompt
 ```
 python /path/to/get-pip.py
 ```
+ Run the following commands:
+```
+$ git clone https://github.com/DaemonLab/Drone-Swarm/edit/Drone_Swarm_Task_1/
+$ cd pypluto
+```
+
 Install the External Dependencies using the following command 
 ```
 pip install -r requirements.txt
@@ -262,7 +269,7 @@ Instructions for control via keyboard can be found in [keyboard_control.md](http
 
 ### d. Manually stopping (killing) the drone
 
-Sometimes, it may happen that the python program using the API may end without deactivating (landing and/or disarming) the drone, and the drone may stay on. In that case, one can run the ```kill.py``` script, which will send the required commands to properly deactivate the drone. 
+In case the drone does not arm after running ```main.py```, which may happen due to improper disarming of the drone, you can run ```kill.py``` instead of disconnecting the drone to disarm it properly and then run ```main.py``` to get regular operation
 
 <div id="Demo"></div>
 
