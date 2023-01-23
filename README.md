@@ -65,7 +65,7 @@ D. Record a video and make the final submission similarly as the previous one.
 <pre>
 ├─docs
 │    │  functions.md
-│	 └─keyboard_control.md
+│    └─keyboard_control.md
 │  
 ├─pypluto
 │    ├─pypluto
