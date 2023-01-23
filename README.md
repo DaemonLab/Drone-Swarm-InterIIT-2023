@@ -20,11 +20,10 @@ API for controlling The Pluto 1.2 nano drone
  3. <p><a href="#TechS">Tech Stack</a></p>
  4. <p><a href="#GetSL">Getting Started ( Linux / Windows) </a></p>
  5. <p><a href="#Usg">Usage</a></p>
-	
-	  a. Pre-Programmed Execution
-	 b. Camera Feedback Execution
-	 c. Keyboard Control
-	 d. Manually stopping (killing) the drone
+ 	a. Pre-Programmed Execution
+	b. Camera Feedback Execution
+	c. Keyboard Control
+	d. Manually stopping (killing) the drone
 
 6. <p><a href="#ProjD">Demo</a></p>
 
@@ -61,7 +60,7 @@ D. Record a video and make the final submission similarly as the previous one.
 <div id="RepoS"></div>
 
 
-## Repository structure
+## 2. Repository structure
 <pre>
 ├─docs
 │    │  functions.md
@@ -124,7 +123,12 @@ $ sudo apt update
 $ sudo apt install python3-pip
 ``` 
 
-##### Using a Python environment is recommended considering the dependencies
+
+<details open>
+<summary>Setting up a Python-Environment(Optional)</summary>
+<br>
+
+
 ```shell
 $ pip install virtualenv
 ```
@@ -132,33 +136,27 @@ Now check your installation
 ```
 $ virtualenv --version
 ```
-Create a virtual environment now inside an appropriate folder,
-this in for specific python version
+Now create a virtual environment inside an appropriate folder, type
+this in terminal for specific python-3 version
 ```
 $ virtualenv -p /usr/bin/python3 Drone_Env
 ```
 After this command, a folder named  **Drone_Env**  will be created. 
 
-Now at last we just need to activate it, using command
+Now at last we just need to activate it, using the command
 ```
 $ source Drone_Env/bin/activate
 ```
-Now you are in a Drone's Python virtual environment
+Now you are in a Drone's Python virtual environment , follow the cmds for installation of packages
 
-#check below cmds
-
-```
-$ git clone https://github.com//Drone-Swarm.git  #add appropriate
-$ cd Drone-Swarm
-$ python3 install setup.py
-$ pip3 install -e .
-
-```
-
+Note:
 You can deactivate environment using
 ```
 $ deactivate 
 ```
+</details>
+
+
 
 
 
