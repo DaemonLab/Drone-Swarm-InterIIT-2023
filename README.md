@@ -18,9 +18,12 @@ API for controlling The Pluto 1.2 nano drone
  1. <p><a href="#ProjD">Project Description</a></p>
  2. <p><a href="#RepoS">Repository Structure</a></p>
  3. <p><a href="#TechS">Tech Stack</a></p>
- 4. <p><a href="#GetSL">Getting Started ( Linux / Windows) </a></p>
-	 a.Prerequisites
-	 b.Setting up :
+ 4. <p><a href="#GetSL">Getting Started ( Linux / Windows) </a></p
+<br>
+ 	a.Prerequisites
+<br>
+	b.Setting up :
+<br>
 		- Python Env for Linux(Optional)
 		- pypluto package in Linux
 		- pypluto package in Windows
