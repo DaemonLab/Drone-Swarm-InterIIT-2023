@@ -197,7 +197,9 @@ pip install -r requirements.txt
 
 
 <div id="GetSW"></div>
-**Note: For MacOS, follow the same procedure as Linux**<br>
+
+**Note: For MacOS, follow the same procedure as Linux**
+
 ## Setting up pypluto package in Windows
 Download [get-pip.py](https://bootstrap.pypa.io/get-pip.py) using cmd prompt
 ```
