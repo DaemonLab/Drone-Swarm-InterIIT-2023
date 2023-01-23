@@ -3,12 +3,14 @@
 ## Camera calibration
 The camera used the task 2 is Lenovo 300 FHD Webcam with FHD 1080P 2.1 Megapixel CMOS Camera and an Ultra-Wide 95 Lens.
 
+
 ## Pose Estimation
 The pose of the drone is obtained from the Aruco marker attached on the drone. The cv2.aruco library, available in the opencv-contrib-python package, is used to detect the drone and its pose, specifically it's x-y coordinates in pixels, height in meters and yaw in radians.
 
 
 
 ## PID control
+![task2](https://user-images.githubusercontent.com/85498394/214069904-bb4d0453-a588-4788-a607-307372c79802.jpg)
 
 
 ## Running
