@@ -127,7 +127,7 @@ D. Record a video and make the final submission similarly as the previous one.
 
 <div id="GetSL"></div>
 
-## 4. Getting Started - Linux
+## 4. Getting Started 
 
 <div id="PreR"></div>
 
