@@ -1,4 +1,5 @@
 
+
 <div id="top"></div>
 
 # Drone Swarm Python
@@ -11,22 +12,31 @@ API for controlling The Pluto 1.2 nano drone
 <!-- TABLE OF CONTENTS (ADD ONCE SUBTOPICS START COMING TOGETHER)-->
 
 
-## Index 
+## Table of Contents
  
  
 
- 1. <p><a href="#ProjD">Project Description</a></p>
- 2. <p><a href="#RepoS">Repository Structure</a></p>
- 3. <p><a href="#TechS">Tech Stack</a></p>
- 4. <p><a href="#GetSL">Getting Started ( Linux / Windows) </a></p>
- 5. <p><a href="#Usg">Usage</a></p>
-	
-	  a. Pre-Programmed Execution
-	 b. Camera Feedback Execution
-	 c. Keyboard Control
-	 d. Manually stopping (killing) the drone
+ <p><a href="#ProjD">1. Project Description</a></p>
+ <p><a href="#RepoS">2. Repository Structure</a></p>
+ <p><a href="#TechS">3. Tech Stack</a></p>
+ <p><a href="#GetSL">4. Getting Started ( Linux / Windows) </a></p>
+ 
+ - <p><a href="#PreR">a. Prerequisite</a></p>
+ - <p><a href="#SetU">b. Setting Up </a></p>
 
-6. <p><a href="#ProjD">Demo</a></p>
+	 - Python Env for Linux(Optional)
+	- pypluto package in Linux
+	- pypluto package in Windows
+
+<p><a href="#Usg">5. Usage</a></p>
+
+-	a. Pre-Programmed Execution
+-  b. Camera Feedback Execution
+-  c. Keyboard Control
+-  d. Manually stopping (killing) the drone
+
+
+<p><a href="#Demo">6. Demo</a></p>
 
 
  
@@ -58,18 +68,47 @@ C. Same way, create a rectangle motion. (1 x 2 meter)
 D. Record a video and make the final submission similarly as the previous one.
 
 
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
 <div id="RepoS"></div>
 
-## 2.Repository Structure 
 
+## 2. Repository structure
+<pre>
+├─docs
+│    │  functions.md
+│    └─keyboard_control.md
+│  
+├─pypluto
+│    ├─pypluto
+│    │   ├─Camera
+│    │   |   | cam_configs.py
+│    │   |   └─marker.py
+│    │   |
+│    │   ├─Control
+│    │   |   └─ PIDmain.py
+│    │   | 
+│    │   |  __init__.py
+│    │   |  drone.py
+│    │   └─ enforce.py
+│    │  
+│    │   kill.py
+│    │   main.py
+│    │   master.py
+│    └─  setup.py???
+│    
+├─PrimusV4-Pluto_1_2-1.hex
+|
+├─Tasks
+│    │  Task1.md
+│    │  Task2.md
+│    └─ Task3.md
+│
+└─requirements.txt
 
-|                |Folder                     |Description                     |
-|----------------|-------------------------------|-----------------------------|
-|1. | Drone Swarm        | Main Python package           |
-|2. |docs - functions.md   | Explanation of Drone Functionalities|
-|   |docs - keyboard_control  | Guide to use keyboard control|
-|   |docs - camera_control.md | Guide to use camera feedback to control drone|
-|| 
+</pre>
 
 <div id="TechS"></div>
 
@@ -82,9 +121,15 @@ D. Record a video and make the final submission similarly as the previous one.
 - matplotlib==3.1.2
 
 
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
 <div id="GetSL"></div>
 
 ## 4. Getting Started - Linux
+
+<div id="PreR"></div>
 
 ### Prerequisites
 
@@ -99,7 +144,13 @@ $ sudo apt update
 $ sudo apt install python3-pip
 ``` 
 
-##### Using a Python environment is recommended considering the dependencies
+<div id="PyEnv"></div>
+
+<details open>
+<summary> **Setting up a Python-Environment(Optional)** </summary>
+<br>
+
+
 ```shell
 $ pip install virtualenv
 ```
@@ -107,39 +158,46 @@ Now check your installation
 ```
 $ virtualenv --version
 ```
-Create a virtual environment now inside an appropriate folder,
-this in for specific python version
+Now create a virtual environment inside an appropriate folder, type
+this in terminal for specific python-3 version
 ```
 $ virtualenv -p /usr/bin/python3 Drone_Env
 ```
 After this command, a folder named  **Drone_Env**  will be created. 
 
-Now at last we just need to activate it, using command
+Now at last we just need to activate it, using the command
 ```
 $ source Drone_Env/bin/activate
 ```
-Now you are in a Drone's Python virtual environment
+Now you are in a Drone's Python virtual environment , follow the <a href="#setupLinux">following cmds</a> for installation of packages
 
-#check below cmds
-
-```
-$ git clone https://github.com//Drone-Swarm.git  #add appropriate
-$ cd Drone-Swarm
-$ python3 install setup.py
-$ pip3 install -e .
-
-```
-
+Note:
 You can deactivate environment using
 ```
 $ deactivate 
 ```
+</details>
 
+
+<div id="SetU"></div>
+
+## Setting up pypluto package in Linux
+
+```
+$ git clone repo_name
+$ cd pypluto
+$ python3 install setup.py
+$ pip install -e . ( don't know exactly)
+$ need to check after this
+```
+
+
+<p align="right">(<a href="#top">back to top</a>)</p>
 
 
 <div id="GetSW"></div>
 
-## Getting Started - **Windows**
+## Setting up pypluto package in Windows
 Download [get-pip.py](https://bootstrap.pypa.io/get-pip.py) using cmd prompt
 ```
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
@@ -152,6 +210,11 @@ Install the External Dependencies using the following command
 ```
 pip install -r requirements.txt
 ```
+
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
 <div id="Usg"></div>
 
 ### 5. Usage
