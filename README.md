@@ -60,16 +60,41 @@ D. Record a video and make the final submission similarly as the previous one.
 
 <div id="RepoS"></div>
 
-## 2.Repository Structure 
 
+## Repository structure
+<pre>
+├─docs
+│    │  functions.md
+│	 └─keyboard_control.md
+│  
+├─pypluto
+│    ├─pypluto
+│    │   ├─Camera
+│    │   |   | cam_configs.py
+│    │   |   └─marker.py
+│    │   |
+│    │   ├─Control
+│    │   |   └─ PIDmain.py
+│    │   | 
+│    │   |  __init__.py
+│    │   |  drone.py
+│    │   └─ enforce.py
+│    │  
+│    │   kill.py
+│    │   main.py
+│    │   master.py
+│    └─  setup.py???
+│    
+├─PrimusV4-Pluto_1_2-1.hex
+|
+├─Tasks
+│    │  Task1.md
+│    │  Task2.md
+│    └─ Task3.md
+│
+└─requirements.txt
 
-|                |Folder                     |Description                     |
-|----------------|-------------------------------|-----------------------------|
-|1. | Drone Swarm        | Main Python package           |
-|2. |docs - functions.md   | Explanation of Drone Functionalities|
-|   |docs - keyboard_control  | Guide to use keyboard control|
-|   |docs - camera_control.md | Guide to use camera feedback to control drone|
-|| 
+</pre>
 
 <div id="TechS"></div>
 
