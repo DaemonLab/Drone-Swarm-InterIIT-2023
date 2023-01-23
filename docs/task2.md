@@ -10,7 +10,10 @@ The pose of the drone is obtained from the Aruco marker attached on the drone. T
 
 
 ## PID control
-![task2](https://user-images.githubusercontent.com/85498394/214069904-bb4d0453-a588-4788-a607-307372c79802.jpg)
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/85498394/214069904-bb4d0453-a588-4788-a607-307372c79802.jpg" alt="Task 2"/>
+</p>
 
 
 ## Running
