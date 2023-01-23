@@ -675,8 +675,7 @@ class pluto:
                     self.indentify_key(self.keyboard_controls[key])
 
                 else:
-                    if(self.armed):
-                     self.reset_speed()
+                    self.reset_speed()
                     #print("Other key: ", key)
                     if (key == '\x03'):
                         #print("Ctrl+C detected")
