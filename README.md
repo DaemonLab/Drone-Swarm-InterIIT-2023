@@ -77,36 +77,36 @@ D. Record a video and make the final submission similarly as the previous one.
 
 ## 2. Repository structure
 <pre>
-├─docs
-│    │  Task1.md
-|    |  keyboard_control.md
+├─ docs
+│    ├─ Task1.md
+|    ├─ keyboard_control.md
 │    └─ task2.md
 │  
-├─pypluto
-│    ├─pypluto
-│    │   ├─Camera
-│    │   |   | CAM_CONFIGS_lenovo.py
-│    │   |   └─marker.py
+├─ pypluto
+│    ├─ pypluto
+│    │   ├─ Camera
+│    │   |   ├─ CAM_CONFIGS_lenovo.py
+│    │   |   └─ marker.py
 │    │   |
-│    │   ├─Control
+│    │   ├─ Control
 │    │   |   └─ PIDmain.py
 │    │   | 
-│    │   |  __init__.py
-│    │   |  drone.py
+│    │   ├─ __init__.py
+│    │   ├─ drone.py
 │    │   └─ enforce.py
 │    │  
-│    │   kill.py
-│    │   main.py
-│    └─  master.py
+│    ├─ kill.py
+│    ├─ main.py
+│    └─ master.py
 │    
-├─PrimusV4-Pluto_1_2-1.hex
+├─ PrimusV4-Pluto_1_2-1.hex
 |
-├─Tasks
-│    │  Task1.md
-│    │  Task2.md
+├─ Tasks
+│    ├─ Task1.md
+│    ├─ Task2.md
 │    └─ Task3.md
 │
-└─requirements.txt
+└─ requirements.txt
 
 </pre>
 
@@ -148,7 +148,7 @@ $ sudo apt install python3-pip
 <div id="PyEnv"></div>
 
 <details open>
-<summary> **Setting up a Python-Environment(Optional)** </summary>
+<summary> Setting up a Python-Environment (optional) </summary>
 <br>
 
 
