@@ -80,12 +80,12 @@ D. Record a video and make the final submission similarly as the previous one.
 ├─docs
 │    │  Task1.md
 |    |  keyboard_control.md
-│    └─ Task2.md
+│    └─ task2.md
 │  
 ├─pypluto
 │    ├─pypluto
 │    │   ├─Camera
-│    │   |   | cam_configs.py
+│    │   |   | CAM_CONFIGS_lenovo.py
 │    │   |   └─marker.py
 │    │   |
 │    │   ├─Control
@@ -259,8 +259,8 @@ For detailed explanation of use of various movement functions, refer to [Task1.m
 
 #### b. Camera Feedback Execution
 
-Instructions for controlling the drone using camera setup can be found here-
-[camera_pid.md](https://github.com//Drone-Swarm/blob/main/docs/camera_pid.md)
+Instructions for controlling the drone using camera setup can be found in the
+[task2.md](https://github.com/DaemonLab/Drone-Swarm/blob/Drone_Swarm_Task_1/docs/task2.md)
 
 
 #### c. Keyboard Control
