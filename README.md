@@ -99,12 +99,7 @@ D. Record a video and make the final submission similarly as the previous one.
 │    ├─ main.py
 │    └─ master.py
 │    
-├─ PrimusV4-Pluto_1_2-1.hex
-|
-├─ Tasks
-│    ├─ Task1.md
-│    ├─ Task2.md
-│    └─ Task3.md
+├─ PrimusV4-Pluto_1_2-1.hex  
 │
 └─ requirements.txt
 
