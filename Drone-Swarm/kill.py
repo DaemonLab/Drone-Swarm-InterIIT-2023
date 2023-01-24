@@ -1,9 +1,6 @@
-
-
-from PlutoX.drone import pluto
-import time
+from pypluto import pluto
 
 if __name__ == '__main__':
-    client =pluto()
+    client = pluto()
+    client.connect()
     client.disarm()
-    time.sleep(5)
