@@ -5,7 +5,6 @@ from multiprocessing import Pipe
 from pypluto.drone import pluto
 import numpy as np
 import time
-import matplotlib.pyplot as plt
 
 #Target coords
 target_array = [
@@ -15,8 +14,8 @@ target_array = [
     [375, 162],
     [914, 149]   
 ]
-xTarget,  yTarget, heightTarget = target_array[0][0],target_array[0][1], 1.0  #pixel, pixel , height(m)
-# 550,192
+xTarget,  yTarget, heightTarget = target_array[0][0],target_array[0][1], 0.8  #pixel, pixel , height(m)
+
 #pid gains
 KPx, KPy, KPz, KPyaw = 0.3, 0.1, 200 , 70
 KIx, KIy, KIz, KIyaw = 0, 0, 0, 0
@@ -98,25 +97,11 @@ def receiver_at_drone1(conn):
     Err = [xError, yError, zError, yawError]
     ErrI = [xErrorI, yErrorI, zErrorI, yawErrorI]
     path = [[0,0,0,0]]
-    print()
-
-    #plotting work
-    # fig,ax = plt.subplots()
-    # fig2, ax2 = plt.subplots()
-    
-    # ax = fig.add_subplot(1,1,1, projection="3d")
     
     drone.connect()
     drone.trim(0, 0, 0, 0)
     drone.disarm()
     drone.arm()
-    # drone.trim(5,18,0,0) #akshit drone
-
-    # drone.trim(-15,-5,0,0) #iit ddrone.trim(-15,-10,0,0)rone
-    # drone.trim(-5,2,0,0)
-
-    # drone.takeoff()
-    # drone.throttle_speed(0,1)
     drone.throttle_speed(300,3)
     print("takeoff")
 
@@ -140,7 +125,6 @@ def receiver_at_drone1(conn):
 
             if (conn.poll()):                
                 pose = conn.recv()
-                # print(f"\n{delay}--Frequency checker(receiving) , received pose {pose}-")
             
             if pose is None:
                 
@@ -149,7 +133,6 @@ def receiver_at_drone1(conn):
 
                 roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 0, 0
 
-                # if timer>=1000:
                 if timeout_limit > 5 : 
                     print("Aruco not detected ,landing")
                     drone.land()
@@ -159,7 +142,6 @@ def receiver_at_drone1(conn):
                 
           
             if pose is not None:
-                # print(f"Pose is {pose}")
                 path.append(pose)
                 start = time.time()
                                                                                          
@@ -183,50 +165,20 @@ def receiver_at_drone1(conn):
                         break
                     xTarget,  yTarget = target_array[target]
 
-
-                    
-                # patht = np.array(path).T
-                # roll_log.append(roll_command)
-                # pitch_log.append(pitch_command)
-                # ax.plot(roll_log)
-                # ax.plot(pitch_log)
-
-                # plt.pause(0.008)
-
-
-                # ax.plot(patht[0], patht[1], patht[2])
-                # ax.set_zlabel("Z")
-                # ax.set_ylabel("Y")
-                # ax.set_xlabel("X")
-            #-----------------------------
-            #prev cmd if pose is none
-
             drone.throttle_speed(10)
             drone.roll_speed(roll_command)
             drone.pitch_speed(pitch_command)
             drone.yaw_speed(yawCommand)
 
-            '''----------------------------'''
-            '''Very impt time.sleep '''
-            #( if removed , it will not let you sleep)'''
             time.sleep(0.04)
             '''this sleep adjusts the running of this files while loop, 
             so that the rate of receiving from marker files is almost matched 
             to that of this file sending commands to drone using api '''
 
-            '''check freq of -
-            1) Frequency checker , received pose 
-            2) Frequency sending '''
-            '''-----------------------------'''
-            #----------------------------------
             if not roll_command==0:
 
                 print(f"\nFrequecy checker(sending) , rcmd: {roll_command}, pcmd: {pitch_command}, tcmd:{throttle_command},  yawcmd:{yawCommand}")
-            
-            plt.pause(0.01)
 
-            # np.linalg.norm(np.array([xError, yError]))<10 and 
-            # if np.linalg.norm(np.array([xError, yError]))<10: 
         except KeyboardInterrupt:
             break
 
@@ -234,6 +186,3 @@ def receiver_at_drone1(conn):
 
     drone.land()
     drone.disarm()
-    # while conn.poll():
-    #     a = conn.recv()
-    # conn.close()
