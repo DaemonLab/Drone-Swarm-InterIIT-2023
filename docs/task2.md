@@ -2,7 +2,12 @@
 
 ## Camera calibration
 The camera used the task 2 is Lenovo 300 FHD Webcam with FHD 1080P 2.1 Megapixel CMOS Camera and an Ultra-Wide 95 Lens.
-
+To calibrate the camera, first print a checkerboard and paste it on a piece of cardboard/wood.
+Then, run ```pics.py``` to click a few images of the board in different angles(around 30). Press 'c' to click the photo and 'q' to end the program when done.
+Now, update the rows and columns in ```camera.py``` according to the size of the board.
+**Do not include the outermost lines when counting the rows and columns**
+Now, make appropiate changes in path of the image folder(if any) in ```camera.py``` and run the code.
+It will return a JSON file containing the camera matrix and the distortion coefficients.
 
 ## Pose Estimation
 The pose of the drone is obtained from the Aruco marker attached on the drone. The cv2.aruco library, available in the opencv-contrib-python package, is used to detect the drone and its pose, specifically it's x-y coordinates in pixels, height in meters and yaw in radians.
