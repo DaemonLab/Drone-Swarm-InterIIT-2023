@@ -78,8 +78,9 @@ D. Record a video and make the final submission similarly as the previous one.
 ## 2. Repository structure
 <pre>
 ├─docs
-│    │  functions.md
-│    └─keyboard_control.md
+│    │  Task1.md
+|    |  keyboard_control.md
+│    └─ Task2.md
 │  
 ├─pypluto
 │    ├─pypluto
@@ -96,8 +97,7 @@ D. Record a video and make the final submission similarly as the previous one.
 │    │  
 │    │   kill.py
 │    │   main.py
-│    │   master.py
-│    └─  setup.py???
+│    └─  master.py
 │    
 ├─PrimusV4-Pluto_1_2-1.hex
 |
