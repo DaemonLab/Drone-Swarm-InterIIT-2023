@@ -214,7 +214,7 @@ class Aruco:
 
 def markerMainSender(connCam):  #connCam
 
-    cameraID = 2
+    cameraID = 2 # your camera id on pc
     target_array = [
     [914, 149],
     [921, 422],
@@ -251,7 +251,7 @@ def markerMainSender(connCam):  #connCam
                     xTarget,  yTarget = target_array[target]
         
         # print(f"\n{i}--From Marker - Pose: {pose}")
-        # connCam.send(pose)
+        connCam.send(pose)
 
 
         key = cv2.waitKey(1) & 0xFF
@@ -262,4 +262,4 @@ def markerMainSender(connCam):  #connCam
     cap.release()
 
 
-markerMainSender(connCam='')
+# markerMainSender(connCam='')
