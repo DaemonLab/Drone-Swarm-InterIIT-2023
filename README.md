@@ -80,7 +80,7 @@ D. Record a video and make the final submission similarly as the previous one.
 ├─ docs
 │    ├─ Task1.md
 |    ├─ keyboard_control.md
-│    └─ task2.md
+│    └─ Task2.md
 │  
 ├─ pypluto
 │    ├─ pypluto
