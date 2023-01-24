@@ -5,7 +5,7 @@
 # Drone Swarm Python
 API for controlling The Pluto 1.2 nano drone
 
-#add a real  gif/photo of our drone here
+![Pluto1 2-ISO-Front](https://user-images.githubusercontent.com/79806119/214293414-403e11c9-3395-4ed4-a8a5-4aa190e86979.png)
 
 [![](https://img.shields.io/badge/License-GPLv3-blue.svg)]()
 
