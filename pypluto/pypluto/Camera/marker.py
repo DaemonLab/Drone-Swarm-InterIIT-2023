@@ -114,7 +114,7 @@ class Aruco:
             
             for (markerCorner, markerID) in zip(corners, ids):
                 # try:
-                rvec, tvec, markerPoints = cv2.aruco.estimatePoseSingleMarkers(np.array(corners[0]), 0.02, cameraMatrix=MATRIX_COEFFICIENTS, distCoeffs=DISTORTION_COEFFICIENTS)
+                rvec, tvec, markerPoints = cv2.aruco.estimatePoseSingleMarkers(np.array(corners), 0.02, cameraMatrix=MATRIX_COEFFICIENTS, distCoeffs=DISTORTION_COEFFICIENTS)
                 # except cv2.error:
                 #     print("Pose Est error")
                 #     return pose, is_detected, image
@@ -214,7 +214,7 @@ class Aruco:
 
 def markerMainSender(connCam):  #connCam
 
-    cameraID = 2 # your camera id on pc
+    cameraID = 0 # your camera id on pc
     target_array = [
     [914, 149],
     [921, 422],
@@ -240,18 +240,24 @@ def markerMainSender(connCam):  #connCam
         
         #Aruco Detection , pose Estimation Block
 
+        pose_dict={}
         corners, ids, rejected = aruco_obj.detectMarkers(image)
+        # print(ids)
         # detected_markers = (corners, ids, image, [550,192])
-        pose, is_detected, detected_markers  = aruco_obj.get_pose(corners, ids, image, [xTarget,yTarget], display=True)
-        cv2.imshow("Image", detected_markers)
-        if pose is not None:
-            if np.sqrt((xTarget-pose[0])**2+(yTarget-pose[1])**2)<100:
-                target += 1
-                if target<5:
-                    xTarget,  yTarget = target_array[target]
+        if len(corners)>0:
+            for i in range(0,len(ids)):
+                pose, is_detected, detected_markers  = aruco_obj.get_pose(corners[i], ids, image, [xTarget,yTarget], display=True)
+                cv2.imshow("Image", detected_markers)
+                pose_dict[ids[i][0]]=pose
+                if pose is not None:
+                    if np.sqrt((xTarget-pose[0])**2+(yTarget-pose[1])**2)<100:
+                        target += 1
+                        if target<5:
+                            xTarget,  yTarget = target_array[target]
         
         # print(f"\n{i}--From Marker - Pose: {pose}")
-        connCam.send(pose)
+        # connCam.send(pose_dict)
+        print(pose_dict)
 
 
         key = cv2.waitKey(1) & 0xFF
@@ -262,4 +268,4 @@ def markerMainSender(connCam):  #connCam
     cap.release()
 
 
-# markerMainSender(connCam='')
+markerMainSender(connCam='')

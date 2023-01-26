@@ -14,8 +14,13 @@ target_array = [
     [375, 162],
     [914, 149]   
 ]
+target_array2=[]
+target_array2.append(target_array[0])
 xTarget,  yTarget, heightTarget = target_array[0][0],target_array[0][1], 0.8  #pixel, pixel , height(m)
-
+Drone1=pluto(DroneIP="10.42.0.74")
+Drone2=pluto(DroneIP="10.42.0.96")
+client = [Drone1,Drone2]
+drone=client[0]
 #pid gains
 KPx, KPy, KPz, KPyaw = 0.3, 0.1, 200 , 70
 KIx, KIy, KIz, KIyaw = 0, 0, 0, 0
@@ -86,7 +91,7 @@ def receiver_at_drone1(conn):
     as soon as we recieve them
     """
     global xTarget,  yTarget, heightTarget
-    drone=pluto()
+    #drone=pluto()
 
     # initialize PID controller
     xError, yError, zError, yawError = 0, 0, 0, 0
@@ -99,7 +104,7 @@ def receiver_at_drone1(conn):
     path = [[0,0,0,0]]
     
     drone.connect()
-    drone.trim(0, 0, 0, 0)
+    #drone.trim(0, 0, 0, 0)
     drone.disarm()
     drone.arm()
     drone.throttle_speed(300,3)
@@ -124,7 +129,11 @@ def receiver_at_drone1(conn):
             # delay = now-start
 
             if (conn.poll()):                
-                pose = conn.recv()
+                pose_dict = conn.recv()
+                if drone==Drone1:
+                    pose=pose_dict[0]
+                else:
+                    pose=pose_dict[1]
             
             if pose is None:
                 
@@ -159,7 +168,21 @@ def receiver_at_drone1(conn):
                 if np.sqrt((xTarget-pose[0])**2+(yTarget-pose[1])**2)<100:
                     print(f"Pose: {pose}")
                     print("Target Reached.")
-                    target += 1
+                    if drone==Drone1:
+                        target_array2.append(target_array[0])
+                        target_array.pop(0)
+                        drone=Drone2
+                        xTarget,  yTarget = target_array2[0]
+                    else:
+                        target_array2.pop(0)
+                        drone=Drone1
+                        if not target_array2:
+                            break
+                        else: 
+                            xTarget,  yTarget = target_array[0]
+                            continue
+
+                    
                     if target==5:
                         print("Task Completed\nLanding")
                         break
