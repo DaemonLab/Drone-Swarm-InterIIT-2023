@@ -1,10 +1,6 @@
-"Entry "
-from pypluto.pluto import *
-import time
+from pypluto import pluto
 
 if __name__ == '__main__':
-    client = Drone()
-    client.land()
-    time.sleep(5)
+    client = pluto()
+    client.connect()
     client.disarm()
-    #time.sleep(5)

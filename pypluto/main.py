@@ -1,37 +1,16 @@
-"Entry "
-from pypluto.pluto import *
+from pypluto import pluto
 import time
+#A sample program to test the drone API
+drone=pluto()
+drone.connect()
+# drone.arm()
+# time.sleep(2)
+# drone.disarm()
+drone.keyboard_control()
 
-if __name__ == '__main__':
-    #client1 = Drone("192.168.17.144","23")
-    client2 = Drone("192.168.4.1","23")
-    #client1.disarm()
-    client2.disarm()
-    #time.sleep(5)
-    #client1.arm()
-    # time.sleep(5)
-    client2.arm()
-    time.sleep(5)
-    #client2.trim(5, -25, 0, 0)
-    #client1.steer("up",400)
-    client2.steer("up",600)
-    #start = time.time()
-    #now = time.time()
-    #gap = now -start
-    # while (gap < 5):
-    #     print("a")
-    #     now = time.time()
-    #     gap = now - start 
-    #     client2.takeoff()
-    #client2.takeoff()
-    # client2.backFlip()
-    time.sleep(2)
 
-    client2.set_steer([0, 0, 220, 0])
-    time.sleep(1)
-    # time.sleep(5)
-    #client1.land()
-    client2.land()
-    time.sleep(4)
-    #client1.disarm()
-    client2.disarm()
+
+
+
+
+
