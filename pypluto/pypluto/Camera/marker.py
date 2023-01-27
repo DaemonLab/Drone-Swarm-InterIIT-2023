@@ -203,7 +203,9 @@ class Aruco:
                     # print("[Inference] ArUco marker ID: {}".format(markerID))
             
         if display:
-                dX,dY = desiredVec
+            for i in range(len(desiredVec[0])):
+                # print(desiredVec[0][i])
+                dX,dY = desiredVec[0][i]
                 cv2.circle(image, (dX, dY), 7, (255, 0, 0), -1)
                     
 
@@ -214,7 +216,7 @@ class Aruco:
 
 def markerMainSender(connCam):  #connCam
 
-    cameraID = 0 # your camera id on pc
+    cameraID = 2 # your camera id on pc
     target_array = [
     [914, 149],
     [921, 422],
@@ -246,18 +248,16 @@ def markerMainSender(connCam):  #connCam
         # detected_markers = (corners, ids, image, [550,192])
         if len(corners)>0:
             for i in range(0,len(ids)):
-                pose, is_detected, detected_markers  = aruco_obj.get_pose(corners[i], ids, image, [xTarget,yTarget], display=True)
+                pose, is_detected, detected_markers  = aruco_obj.get_pose(corners[i], ids, image, [target_array], display=True)
                 cv2.imshow("Image", detected_markers)
-                pose_dict[ids[i][0]]=pose
-                if pose is not None:
-                    if np.sqrt((xTarget-pose[0])**2+(yTarget-pose[1])**2)<100:
-                        target += 1
-                        if target<5:
-                            xTarget,  yTarget = target_array[target]
+                pose_dict[str(ids[i][0])]=pose
+
+        else:
+            cv2.imshow("Image", image)
         
         # print(f"\n{i}--From Marker - Pose: {pose}")
-        # connCam.send(pose_dict)
-        print(pose_dict)
+        connCam.send(pose_dict)
+        # print(pose_dict)
 
 
         key = cv2.waitKey(1) & 0xFF
@@ -268,4 +268,4 @@ def markerMainSender(connCam):  #connCam
     cap.release()
 
 
-markerMainSender(connCam='')
+# markerMainSender(connCam='')
