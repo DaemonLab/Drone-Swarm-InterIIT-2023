@@ -16,17 +16,18 @@ target_array = [
 ]
 target_array2=[]
 target_array2.append(target_array[0])
-xTarget,  yTarget, heightTarget = target_array[0][0],target_array[0][1], 0.8  #pixel, pixel , height(m)
+# xTarget,  yTarget, heightTarget = target_array[0][0],target_array[0][1], 0.8  #pixel, pixel , height(m)
+xTarget,  yTarget, heightTarget = 693, 335, 0.8
 Drone1=pluto(DroneIP="10.42.0.74")
-Drone2=pluto(DroneIP="10.42.0.96")
+# Drone2=pluto(DroneIP="10.42.0.96")
 Drone1.connect()
-Drone2.connect()
+# Drone2.connect()
 # client = [Drone1,Drone2]
 drone=Drone1
 #pid gains
-KPx, KPy, KPz, KPyaw = 0.3, 0.1, 200 , 70
-KIx, KIy, KIz, KIyaw = 0, 0, 0, 0
-KDx, KDy, KDz, KDyaw = 3, 5, 0, 0
+KPx, KPy, KPz, KPyaw = 0.5, 0.1, 200 , 70
+KIx, KIy, KIz, KIyaw = 0.01, 0.01, 0, 0
+KDx, KDy, KDz, KDyaw = 5, 30, 0, 0
 
 
 #currently global , 
@@ -105,15 +106,15 @@ def receiver_at_drone1(conn):
     ErrI = [xErrorI, yErrorI, zErrorI, yawErrorI]
     path = [[0,0,0,0]]
     
-    #drone.trim(0, 0, 0, 0)
+    drone.trim(5, 0, 0, 0)
     Drone1.disarm()
-    Drone2.disarm()
+    # Drone2.disarm()
     # drone.arm()
-    Drone1.arm()
-    Drone2.arm()
-    Drone1.throttle_speed(50,1)
-    Drone2.throttle_speed(50,1)
-    # Drone2.takeoff()
+    # Drone1.arm()
+    # Drone2.arm()
+    # Drone1.throttle_speed(50,1)
+    # Drone2.throttle_speed(50,1)
+    Drone1.takeoff()
     # drone.throttle_speed(300,3)
     print("takeoff")
 
@@ -126,12 +127,12 @@ def receiver_at_drone1(conn):
     roll_log = []
     pitch_log = []
 
-    
     while True:
 
 
         try:
-            # pose = None
+            # prev_time = time.time()
+            pose_dict = None
             # now = time.time()
             # delay = now-start
 
@@ -146,12 +147,12 @@ def receiver_at_drone1(conn):
 
                 roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 0, 0
 
-                if timeout_limit > 5 : 
+                if timeout_limit > 8 : 
                     print("Aruco not detected ,landing")
                     drone.land()
                     break
 
-                print(f"\ntimer :{timeout_limit}")
+                # print(f"\ntimer :{timeout_limit}")
                 
           
             elif (not pose_dict)==False:
@@ -159,65 +160,66 @@ def receiver_at_drone1(conn):
                 print(pose_dict)
                 if drone==Drone1:
                     pose=pose_dict['0']
-                elif drone==Drone2:
-                    pose=pose_dict['1']
-                path.append(pose)
+                # elif drone==Drone2:
+                #     pose=pose_dict['1']
+                # path.append(pose)
                 start = time.time()
-                                                                                         
+                # curr_time = time.time()
                 roll_command, pitch_command, throttle_command, yawCommand, Err, ErrI = pid(pose, [xTarget,  yTarget, heightTarget], Err, ErrI)
-                print("pid calc successssssss...sending cammand")
+                # print("pid calc successssssss...sending cammand")
                 if (roll_command>100):
                     roll_command=100
                 elif (roll_command<-100):
                     roll_command=-100
-                if (pitch_command>100):
-                    pitch_command=100
-                elif (pitch_command<-100):
-                    pitch_command=-100
+                if (pitch_command>50):
+                    pitch_command=50
+                elif (pitch_command<-50):
+                    pitch_command=-50
 
                 if np.sqrt((xTarget-pose[0])**2+(yTarget-pose[1])**2)<100:
                     print(f"Pose: {pose}")
                     print("Target Reached.")
-                    if drone==Drone1:
-                        target_array2.append(target_array[0])
-                        target_array.pop(0)
-                        drone=Drone2
-                        if len(target_array)>1:
-                            xTarget,  yTarget = target_array2[0]
-                        # if not target_array:
-                        #         drone.land()
-                    else:
-                        target_array2.pop(0)
-                        drone=Drone1
-                        if not target_array2:
-                            break
-                        elif target_array:
-                            xTarget,  yTarget = target_array[0]
-                            continue
+
+                    # if drone==Drone1:
+                    #     target_array2.append(target_array[0])
+                    #     target_array.pop(0)
+                    #     drone=Drone2
+                    #     if len(target_array)>1:
+                    #         xTarget,  yTarget = target_array2[0]
+                    #     # if not target_array:
+                    #     #         drone.land()
+                    # else:
+                    #     target_array2.pop(0)
+                    #     drone=Drone1
+                    #     if not target_array2:
+                    #         break
+                    #     elif target_array:
+                    #         xTarget,  yTarget = target_array[0]
+                    #         continue
 
                     
                     # if target==5:
                     #     print("Task Completed\nLanding")
                     #     break
                     # xTarget,  yTarget = target_array[target]
-            if drone==Drone1:
-                print("bheja2222222")
-                Drone2.throttle_speed(40)
-            elif drone==Drone2:
-                print("bheja111111")
-                Drone1.throttle_speed(40)
+            # if drone==Drone1:
+            #     print("bheja2222222")
+            #     Drone2.throttle_speed(40)
+            # elif drone==Drone2:
+            #     print("bheja111111")
+            #     Drone1.throttle_speed(40)
 
-            drone.throttle_speed(40)
-            print("bhejjaaa11111")
+            drone.throttle_speed(-5)
+            # print("bhejjaaa11111")
             drone.roll_speed(roll_command)
             drone.pitch_speed(pitch_command)
             drone.yaw_speed(yawCommand)
 
             time.sleep(0.04)
+            # prev_time = curr_time
             '''this sleep adjusts the running of this files while loop, 
             so that the rate of receiving from marker files is almost matched 
             to that of this file sending commands to drone using api '''
-
             if not roll_command==0:
 
                 print(f"\nFrequecy checker(sending) , rcmd: {roll_command}, pcmd: {pitch_command}, tcmd:{throttle_command},  yawcmd:{yawCommand}")
@@ -229,5 +231,5 @@ def receiver_at_drone1(conn):
 
     Drone1.land()
     Drone1.disarm()
-    Drone2.land()
-    Drone2.disarm()
+    # Drone2.land()
+    # Drone2.disarm()

@@ -216,7 +216,7 @@ class Aruco:
 
 def markerMainSender(connCam):  #connCam
 
-    cameraID = 2 # your camera id on pc
+    cameraID = 3 # your camera id on pc
     target_array = [
     [914, 149],
     [921, 422],
@@ -253,6 +253,10 @@ def markerMainSender(connCam):  #connCam
                 pose_dict[str(ids[i][0])]=pose
 
         else:
+            for i in range(len(target_array)):
+                # print(desiredVec[0][i])
+                dX,dY = target_array[i]
+                cv2.circle(image, (dX, dY), 7, (255, 0, 0), -1)
             cv2.imshow("Image", image)
         
         # print(f"\n{i}--From Marker - Pose: {pose}")
