@@ -11,6 +11,8 @@ else:
     import termios
     import tty
 
+import threading
+
 
 
 MSP_STATUS=101          # out cmd cycletime & errors_count & sensor present & box activation & current setting number
@@ -38,6 +40,8 @@ class pluto:
         self.aux2=1000
         self.aux3=1500
         self.aux4=1200
+        self.cSendThread = None
+        self.thread_active = False
         
         self.buffer_rc=bytearray([])               # rc data that has to be sent continuously 
         self.trim(0,0,0,0) #To stabalize the drone. Initally the trim values are set to 0 and can be changed according to the drift of the drone
@@ -108,7 +112,18 @@ class pluto:
             self.sendPacket(self.buffer_rc)
             self.sendPacket(self.buffer)
         
-        
+    def cSendVals(self, name):
+        while True:
+            print(f"Hello from inside the thread {name}")
+            if self.thread_active:
+                print(f"Val: {self.rc}")
+                self.create_sendMSPpacket(MSP_SET_RAW_RC,self.rc)
+            else:
+                # no last command means we should exit thread
+                print("Leaving thread")
+                break
+            time.sleep(1) # delay between continuous commands being sent
+        pass
    
 
     def arm(self):  
@@ -117,6 +132,12 @@ class pluto:
         ''' 
         self.rc[2]=1000
         self.rc[-1]=1500
+
+        self.thread_active = True
+
+        self.cSendThread = threading.Thread(target=self.cSendVals, args=(1,))
+        self.cSendThread.start()
+
         self.create_sendMSPpacket(MSP_SET_RAW_RC,self.rc)
         time.sleep(1)
        
@@ -127,8 +148,13 @@ class pluto:
         self.rc[2]=1300
         self.rc[-1]=1200
         self.create_sendMSPpacket(MSP_SET_RAW_RC,self.rc)
+        self.thread_active = False
+        if self.cSendThread != None:
+            self.cSendThread.join()
         time.sleep(1)
-       
+
+    def change_val(self):
+        self.val = "Yems"
 
 
     def box_arm(self):
@@ -538,7 +564,8 @@ class pluto:
 
     def restoreTerminalSettings(self,old_settings):
         if sys.platform == 'win32':
-            return termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
+            return None
+        return termios.tcsetattr(sys.stdin, termios.TCSADRAIN, old_settings)
 
     def indentify_key(self,key_value):
 
