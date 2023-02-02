@@ -4,11 +4,9 @@ import numpy as np
 from threading import Thread
 from .enforce_types import enforce_types
 
-# threads_initialised = False
-# check = False
-# data = None
 @enforce_types
 class Drone:
+
     def __init__(self, DroneIP="192.168.4.1", DronePort="23"):
         self.DRONEIP = DroneIP
         self.DRONEPORT = DronePort
@@ -17,13 +15,7 @@ class Drone:
             print("pluto connected")
         except:
             print("Error While Connecting to Pluto")
-        # global threads_initialised, data
-        # if not threads_initialised:
-        #     write_thread = Thread(target=Drone.sendData(b'$M',""))
-        #     threads_initialised = True
-        #     write_thread.start()
         self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE, self.RC_YAW = 1500, 1500, 1500, 1500
-
 
     def disconnect(self):
         self.tn.close()
@@ -82,18 +74,6 @@ class Drone:
         data=[3]
         parsed=self.message(data, 217)
         self.sendData(parsed, "backflip")
-        
-    # def takeoff(self):
-    #     RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE+500, self.RC_YAW, 1500, 1000, 1500, 1500
-    #     data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
-    #     parsed = self.message(data, 200)
-    #     self.sendData(parsed, "Takeoff")
-    
-    # def land(self):
-    #     RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4 = self.RC_ROLL, self.RC_PITCH, self.RC_THROTTLE-200, self.RC_YAW, 1500, 1000, 1500, 1500
-    #     data = [RC_ROLL, RC_PITCH, RC_THROTTLE, RC_YAW, RC_AUX1, RC_AUX2, RC_AUX3, RC_AUX4]
-    #     parsed = self.message(data, 200)
-    #     return parsed
 
     def trim(self, roll, pitch, throttle, yaw):
         self.RC_ROLL += roll
@@ -101,8 +81,6 @@ class Drone:
         self.RC_THROTTLE += throttle
         self.RC_YAW += yaw
 
-
-    
     def steer_cmd(self, direction:str, magnitude:int=100):
         """
         Parses the steer commands.
@@ -192,16 +170,9 @@ class Drone:
             print("Invalid legth of message array. format: [roll, pitch, throttle, yaw]")
         self.sendData(self.set_steer_data(magnitude), f"Sending {magnitude}")
 
-    
     def sendData(self, data, cmd):
-        # prev_data = data
-        # while (check):
         try:
             print(data)
             self.tn.write(data)
-            #print(self.tn.read_very_eager())
         except:
             print("Error While sending {} Data".format(cmd))
-
-            # if (not prev_data==data):
-            #     break

@@ -1,8 +1,5 @@
 import cv2
 import numpy as np
-import math
-import time
-# from 
 
 CAMERA_HEIGHT = 1.9 #
 
@@ -11,35 +8,7 @@ Aruco_ht_pixels_grnd =0 #ht in pixels when aruco on ground( reference dist)
 Aruco_width_pixels_grnd = 15 #wdth in pixels when aruco on ground( reference dist)
 Aruco_len_pixels_grnd = 15
 
-#new
-#matrix_coefficients - Intrinsic matrix of the calibrated camera
-# MATRIX_COEFFICIENTS = np.array([[
-#             464.8192469875138,
-#             0.0,
-#             330.94525650909304
-#         ],
-#         [
-#             0.0,
-#             468.11321340402986,
-#             219.95374647133153
-#         ],
-#         [
-#             0.0,
-#             0.0,
-#             1.0
-#         ]])
 
-# # #distortion_coefficients - Distortion coefficients associated with our camera
-# DISTORTION_COEFFICIENTS = np.array([
-#             -0.033875901439185716,
-#             0.029365508680956807,
-#             -0.0009132809734765359,
-#             0.004165081566793737,
-#             -0.0191803679654891])
- 
-
-
-#old
 #matrix_coefficients - Intrinsic matrix of the calibrated camera
 MATRIX_COEFFICIENTS = np.array([[
             1447.9804004365824,
@@ -105,7 +74,7 @@ class Aruco:
 
         is_detected = False
         pose = None
-        # print(f"corners, {corners} IDs: {ids}")
+
         
         if len(corners) > 0:
             
@@ -160,7 +129,7 @@ class Aruco:
                 hX, hY = (topLeft + topRight)//2
                 tX, tY = hX-cX, hY-cY
                 yaw = np.arctan2(tY, tX) 
-                # yaw = np.rad2deg(yaw)
+
 
                     
                 drone_height = CAMERA_HEIGHT - tvec[0,0,2]
@@ -183,11 +152,10 @@ class Aruco:
             
         if display:
             for i in range(len(desiredVec[0])):
-                # print(desiredVec[0][i])
+
                 dX,dY = desiredVec[0][i]
                 cv2.circle(image, (dX, dY), 7, (255, 0, 0), -1)
-            # dX,dY = 646, 348
-            # cv2.circle(image, (dX, dY), 7, (255, 0, 0), -1)
+
             cv2.imshow("Image", image)        
 
                 
@@ -195,7 +163,7 @@ class Aruco:
 
 
 
-def markerMainSender(connCam):  #connCam
+def marker_publisher(connCam):  #connCam
 
     cameraID = 2 # your camera id on pc
     target_array = [
@@ -222,8 +190,6 @@ def markerMainSender(connCam):  #connCam
 
     aruco_obj = Aruco("DICT_4X4_50")
 
-    prevdist = 0
-    alpha = 0.1
     while cap.isOpened(): 
 
         ret, image = cap.read()               
@@ -232,8 +198,7 @@ def markerMainSender(connCam):  #connCam
 
         pose_dict={}
         corners, ids, rejected = aruco_obj.detectMarkers(image)
-        # print(ids)
-        # detected_markers = (corners, ids, image, [550,192])
+ 
         if len(corners)>0:
             for i in range(0,len(ids)):
                 pose, is_detected, detected_markers  = aruco_obj.get_pose(corners[i], ids, image, [target_array], display=True)
@@ -242,15 +207,14 @@ def markerMainSender(connCam):  #connCam
 
         else:
             for i in range(len(target_array)):
-                # print(desiredVec[0][i])
+
                 dX,dY = target_array[i]
                 cv2.circle(image, (dX, dY), 7, (255, 0, 0), -1)
-            # dX,dY = 646, 348
-            # cv2.circle(image, (dX, dY), 7, (255, 0, 0), -1)
+
             cv2.imshow("Image", image)
         
         connCam.send(pose_dict)
-        # print(pose_dict)
+
 
 
         key = cv2.waitKey(1) & 0xFF
@@ -260,4 +224,6 @@ def markerMainSender(connCam):  #connCam
     cv2.destroyAllWindows()
     cap.release()
 
-# markerMainSender(connCam='')
+if __name__ == "__main__":
+    # marker_publisher(connCam='')
+    pass

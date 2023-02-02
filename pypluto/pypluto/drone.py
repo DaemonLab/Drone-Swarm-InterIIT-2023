@@ -1,4 +1,3 @@
-
 import socket #To form the connection between the drone and the laptop
 import time
 import math
@@ -11,8 +10,6 @@ else:
     import termios
     import tty
 
-
-
 MSP_STATUS=101          # out cmd cycletime & errors_count & sensor present & box activation & current setting number
 MSP_RAW_IMU=102         # 9 DOF 
 MSP_ATTITUDE=108        # 2 angles 1 heading
@@ -22,6 +19,8 @@ MSP_ANALOG=110          # vbat, powermetersum, rssi if available on RX
 MSP_SET_RAW_RC=200      # 8 rc channel
 MSP_SET_COMMAND=217     # setting commands 
 RETRY_COUNT=3           # no of retries before getting required data
+
+
 @enforce_types
 class pluto:
    
@@ -41,9 +40,6 @@ class pluto:
         
         self.buffer_rc=bytearray([])               # rc data that has to be sent continuously 
         self.trim(0,0,0,0) #To stabalize the drone. Initally the trim values are set to 0 and can be changed according to the drift of the drone
-        
-
-    
 
     def connect(self):
         '''
@@ -79,7 +75,6 @@ class pluto:
         
         self.rc=[self.roll, self.pitch, self.throttle, self.yaw, self.aux1, self.aux2, self.aux3, self.aux4]
     
-       
     def create_sendMSPpacket(self, msg_type, msg):
         '''
         Function to compose and send message packets to the drone
@@ -107,9 +102,6 @@ class pluto:
         else:
             self.sendPacket(self.buffer_rc)
             self.sendPacket(self.buffer)
-        
-        
-   
 
     def arm(self):  
         '''
@@ -129,8 +121,6 @@ class pluto:
         self.create_sendMSPpacket(MSP_SET_RAW_RC,self.rc)
         time.sleep(1)
        
-
-
     def box_arm(self):
         '''
         Function called before takeoff, user does not directly use it
@@ -140,7 +130,6 @@ class pluto:
         self.create_sendMSPpacket(MSP_SET_RAW_RC,self.rc)
         time.sleep(0.5)
        
-
     def clamp_rc(self,x:int):
         #Not called by the user
         return max(1000, min(2000,x))
@@ -159,8 +148,6 @@ class pluto:
         if(duration==0):
             self.create_sendMSPpacket(MSP_SET_RAW_RC,self.rc)
            
-  
-        
     def pitch_speed(self,value,duration=0):
         '''
         Function to set the pitch (y-axis movement) to the drone
@@ -174,8 +161,6 @@ class pluto:
          time.sleep(0.1)
         if(duration==0):
             self.create_sendMSPpacket(MSP_SET_RAW_RC,self.rc)
-
-           
 
     def throttle_speed(self,value,duration=0): 
         '''
@@ -191,7 +176,6 @@ class pluto:
         if(duration==0):
             self.create_sendMSPpacket(MSP_SET_RAW_RC,self.rc)
         
-
     def yaw_speed(self,value,duration=0):
         '''
         Function to set the yaw (rotation about z-axis) to the drone
@@ -226,7 +210,6 @@ class pluto:
         self.rc[:4]=[self.roll,self.pitch,self.throttle,self.yaw]
         self.create_sendMSPpacket(MSP_SET_RAW_RC,self.rc)
 
-
     def takeoff(self):
         '''
         Function to takeoff the drone 
@@ -235,7 +218,6 @@ class pluto:
         cmd=[1]
         self.create_sendMSPpacket(MSP_SET_COMMAND,cmd)
         self.throttle_speed(0,3)
-        
         
     def land(self):
         '''
@@ -246,7 +228,6 @@ class pluto:
         self.throttle_speed(0,5)
         self.disarm()
 
-
     def flip(self):
         '''
         Function for backflip
@@ -254,8 +235,6 @@ class pluto:
         cmd=[3]
         self.create_sendMSPpacket(MSP_SET_COMMAND,cmd)
         self.throttle_speed(0,3)
-
-    
 
     def read16(self,arr):
         '''
@@ -269,6 +248,7 @@ class pluto:
 
     
     ################################################## MSP_ALTITUDE #############################################################
+
 
     def get_height(self):
             '''
@@ -284,7 +264,6 @@ class pluto:
              if(i+3<len(data)):
               return self.read16(data[i+1:i+3])
 
-
     def get_vario(self):
             '''
             Function to return the value of rate of change of altitude from the sensors of the drone
@@ -298,15 +277,10 @@ class pluto:
                 i+=1
              if(i+7<len(data)):
               return self.read16(data[i+5:i+7])
-            
-
-
-
-
-
 
     
     ###################################################### MSP_ATTITUDE #########################################################
+
 
     def get_roll(self):
             '''
@@ -321,7 +295,6 @@ class pluto:
                  i+=1
                 if(i+3<len(data)):
                  return self.read16(data[i+1:i+3])/10
-  
 
     def get_pitch(self):
             '''
@@ -354,6 +327,7 @@ class pluto:
 
     ###################################################### MSP_RAW_IMU ##########################################################
     
+
     def get_acc_x(self):
             '''
             Function to return the value of accelerometer(x-axis) from the drone
@@ -382,7 +356,6 @@ class pluto:
                 if(i+5<len(data)):
                     return self.read16(data[i+3:i+5])
 
-
     def get_acc_z(self):
             '''
             Function to return the value of accelerometer(z-axis) from the drone
@@ -396,7 +369,6 @@ class pluto:
                     i+=1
                 if(i+7<len(data)):
                     return self.read16(data[i+5:i+7])
-    
 
     def get_gyro_x(self):
             '''
@@ -411,7 +383,6 @@ class pluto:
                     i+=1
                 if(i+9<len(data)):
                     return self.read16(data[i+7:i+9])
-    
 
     def get_gyro_y(self):
             '''
@@ -441,7 +412,6 @@ class pluto:
                 if(i+13<len(data)):
                     return self.read16(data[i+11:i+13])
     
-
     def get_mag_x(self):
             '''
             Function to return the value of magnetometer(x-axis) from the drone
@@ -456,7 +426,6 @@ class pluto:
                 if(i+15<len(data)):
                     return self.read16(data[i+13:i+15])
     
-
     def get_mag_y(self):
             '''
             Function to return the value of magnetometer(y-axis) from the drone
@@ -488,6 +457,7 @@ class pluto:
 
 ###################################################### MSP_ANALOG ###############################################################
 
+
     def get_battery(self):
             '''
             Function to return the value of battery in volts from the drone
@@ -510,7 +480,6 @@ class pluto:
     def recievePacket(self):
        return self.mySocket.recv(self.BUFFER_SIZE)
 
-    
     
     
 ###################################################### KEYBOARD_CONTROL #########################################################
@@ -624,7 +593,6 @@ class pluto:
                 #print("Backward key detected")
                 self.pitch_speed(-100)
         
-
     def keyboard_control(self,stat=False):
         
         self.disarm()

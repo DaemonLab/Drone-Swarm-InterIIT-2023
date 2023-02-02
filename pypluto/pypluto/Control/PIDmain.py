@@ -21,9 +21,10 @@ target_array = [
     [364, 248],
     [375, 162],
 ]
+
 target_array2=[]
 target_array2.append(target_array[0])
-xTarget,  yTarget, heightTarget = target_array[0][0],target_array[0][1], 0.8  #pixel, pixel , height(m)
+x_target,  y_target, height_target = target_array[0][0],target_array[0][1], 0.8  #pixel, pixel , height(m)
 
 Drone1=pluto()
 
@@ -46,70 +47,70 @@ def pid(pose, target, Err, ErrI):
     """
     PID Control Loop
     """
-    xError, yError, zError, yawError = Err
-    xErrorI, yErrorI, zErrorI, yawErrorI = ErrI
+    x_error, y_error, z_error, yaw_error = Err
+    x_errorI, y_errorI, z_errorI, yaw_errorI = ErrI
 
-    xTarget, yTarget, heightTarget = target
+    x_target, y_target, height_target = target
 
 
 
-    xError_old = xError
-    yError_old = yError
-    zError_old = zError
-    yawError_old = yawError
+    x_error_old = x_error
+    y_error_old = y_error
+    z_error_old = z_error
+    yaw_error_old = yaw_error
 
     x,   y,   z,   yaw = pose
 
-    xError = xTarget-x
-    yError = yTarget-y
-    zError = heightTarget-z
-    yawError = YAW_TARGET-yaw
+    x_error = x_target-x
+    y_error = y_target-y
+    z_error = height_target-z
+    yaw_error = YAW_TARGET-yaw
 
 
-    xErrorI += xError
-    yErrorI += yError
-    zErrorI += zError
-    yawErrorI += yawError
+    x_errorI += x_error
+    y_errorI += y_error
+    z_errorI += z_error
+    yaw_errorI += yaw_error
 
     # compute derivative (variation) of errors (D)
-    xErrorD = xError-xError_old
-    yErrorD = yError-yError_old
-    zErrorD = zError-zError_old
-    yawErrorD = yawError-yawError_old
+    x_errorD = x_error-x_error_old
+    y_errorD = y_error-y_error_old
+    z_errorD = z_error-z_error_old
+    yaw_errorD = yaw_error-yaw_error_old
 
     # compute commands
-    xCommand = KPx*xError + KIx*xErrorI + KDx*xErrorD
-    yCommand = KPy*yError + KIy*yErrorI + KDy*yErrorD
-    zCommand = KPz*zError + KIz*zErrorI + KDz*zErrorD
+    xCommand = KPx*x_error + KIx*x_errorI + KDx*x_errorD
+    yCommand = KPy*y_error + KIy*y_errorI + KDy*y_errorD
+    zCommand = KPz*z_error + KIz*z_errorI + KDz*z_errorD
 
-    yawCommand    = int( KPyaw*yawError + KIyaw*yawErrorI + KDyaw*yawErrorD)
+    yaw_command    = int( KPyaw*yaw_error + KIyaw*yaw_errorI + KDyaw*yaw_errorD)
     pitch_command = int( np.cos(yaw)*xCommand + np.sin(yaw)*yCommand)
     roll_command  = int( -np.sin(yaw)*xCommand + np.cos(yaw)*yCommand ) 
     throttle_command = int(zCommand)
-    Err = [xError, yError, zError, yawError]
-    ErrI = [xErrorI, yErrorI, zErrorI, yawErrorI]
+    Err = [x_error, y_error, z_error, yaw_error]
+    ErrI = [x_errorI, y_errorI, z_errorI, yaw_errorI]
     
-    return roll_command, pitch_command, throttle_command, yawCommand, Err, ErrI
+    return roll_command, pitch_command, throttle_command, yaw_command, Err, ErrI
 
 
-def receiver_at_drone1(conn):
+def PID_main(conn):
     """
     Function to recieve data from pid file and 
     using drone_api velocity fns 
     we can send the cmd to drone from here 
     as soon as we recieve them
     """
-    global xTarget,  yTarget, heightTarget, drone
+    global x_target,  y_target, height_target, drone
     
 
     # initialize PID controller
-    xError, yError, zError, yawError = 0, 0, 0, 0
-    xErrorI, yErrorI, zErrorI, yawErrorI = 0, 0, 0, 0
-    xErrorD, yErrorD, zErrorD, yawErrorD = 0, 0, 0, 0
-    xError_old, yError_old, zError_old, yawError_old = 0, 0, 0, 0
+    x_error, y_error, z_error, yaw_error = 0, 0, 0, 0
+    x_errorI, y_errorI, z_errorI, yaw_errorI = 0, 0, 0, 0
+    x_errorD, y_errorD, z_errorD, yaw_errorD = 0, 0, 0, 0
+    x_error_old, y_error_old, z_error_old, yaw_error_old = 0, 0, 0, 0
 
-    Err = [xError, yError, zError, yawError]
-    ErrI = [xErrorI, yErrorI, zErrorI, yawErrorI]
+    Err = [x_error, y_error, z_error, yaw_error]
+    ErrI = [x_errorI, y_errorI, z_errorI, yaw_errorI]
     path = [[0,0,0,0]]
     
     #Drone1.trim(-8,20,0,0) # iit
@@ -126,7 +127,7 @@ def receiver_at_drone1(conn):
 
     tReachCount=0
     # default values when not detected
-    roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 50, 0
+    roll_command, pitch_command, throttle_command, yaw_command = 0, 0, 50, 0
 
     start = time.time()
     target = 0
@@ -149,7 +150,7 @@ def receiver_at_drone1(conn):
                 now_time = time.time()
                 timeout_limit = now_time - start 
 
-                roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 50, 0
+                roll_command, pitch_command, throttle_command, yaw_command = 0, 0, 50, 0
 
                 if timeout_limit > 8 : 
                     print("Aruco not detected ,landing")
@@ -165,7 +166,7 @@ def receiver_at_drone1(conn):
                         pass
 
                 start = time.time()
-                roll_command, pitch_command, throttle_command, yawCommand, Err, ErrI = pid(pose, [xTarget,  yTarget, heightTarget], Err, ErrI)
+                roll_command, pitch_command, throttle_command, yaw_command, Err, ErrI = pid(pose, [x_target,  y_target, height_target], Err, ErrI)
                 
                 # Clipping commands
                 if (roll_command>100):
@@ -177,7 +178,7 @@ def receiver_at_drone1(conn):
                 elif (pitch_command<-70):
                     pitch_command=-70
 
-                if np.sqrt((xTarget-pose[0])**2+(yTarget-pose[1])**2)<25:
+                if np.sqrt((x_target-pose[0])**2+(y_target-pose[1])**2)<25:
                     # print(f"Pose: {pose}")
                     print("Target Reached.")
                     drone.reset_speed()
@@ -187,12 +188,12 @@ def receiver_at_drone1(conn):
                         if target==15:
                             print("Task Completed\nLanding")
                             break
-                        xTarget,  yTarget = target_array[target]
+                        x_target,  y_target = target_array[target]
                         tReachCount=0
 
    
             # Set all speeds at once
-            drone.set_all_speed(roll_command, pitch_command, throttle_command, yawCommand)
+            drone.set_all_speed(roll_command, pitch_command, throttle_command, yaw_command)
             
 
             time.sleep(0.04)
@@ -203,7 +204,7 @@ def receiver_at_drone1(conn):
             
             
             if not roll_command==0:
-                print(f"\nFrequecy checker(sending) , rcmd: {roll_command}, pcmd: {pitch_command}, tcmd:{throttle_command},  yawcmd:{yawCommand}")
+                print(f"\nFrequecy checker(sending) , rcmd: {roll_command}, pcmd: {pitch_command}, tcmd:{throttle_command},  yawcmd:{yaw_command}")
 
         except KeyboardInterrupt:
             break

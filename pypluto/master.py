@@ -2,8 +2,8 @@ import matplotlib
 import multiprocessing
 from multiprocessing import Pipe
 import time 
-from pypluto.Control.PIDmain import receiver_at_drone1
-from pypluto.Camera.marker import markerMainSender
+from pypluto.Control.PIDmain import PID_main
+from pypluto.Camera.marker import marker_publisher
 
 
 # builds necessary connections of drone(1,2,...) & the camera file
@@ -14,8 +14,8 @@ def build_conn():
     connCam,connDrone1 = Pipe(duplex = True)
 
 
-    p1 = multiprocessing.Process(target=markerMainSender, args=( [connCam]))
-    p2 = multiprocessing.Process(target=receiver_at_drone1, args=([connDrone1]))
+    p1 = multiprocessing.Process(target=marker_publisher, args=( [connCam]))
+    p2 = multiprocessing.Process(target=PID_main, args=([connDrone1]))
 
 
 
