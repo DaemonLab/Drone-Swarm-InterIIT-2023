@@ -47,7 +47,7 @@ client.yaw_speed(100,2)      #A yaw of 100 for 2 seconds
 
 To send all values at once 
 
-```
+```python
 # roll,pitch,throttle,yaw of value 100 each for 2 seconds
 client.set_all_speed(100,100,100,100,2)
 
