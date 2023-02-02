@@ -5,8 +5,8 @@ Initialising drone object with ```Drone IP``` and ```Port``` as arguements. If n
 ```python
 client = Drone("192.168.4.1","23")
 ```
-###Connecting and disconnecting the drone
-For connecting the drone, initalise an object of class pluto and call 
+### Connecting and disconnecting the drone
+For connecting the drone, initialise an object of class pluto and call 
 ```python
 client.connect()
 ```
@@ -31,18 +31,26 @@ client.land() # land
 ```
 
 ### Flips
-Currently, only one type of flip is supported in the API (backflips). 
+To perform a backflip. 
 ```python
 client.flip()
 ```
 
 ### Steering the drone in a particular direction
-The drone can be steered in a particular direction by setting the values of throttle, pitch, roll and yaw.
+The drone can be steered in a particular direction by setting the values of throttle, pitch, roll and yaw. ( range of values is from : -600 to 600)
 ```python
 client.roll_speed(100,2)     #A roll of 100 for 2 seconds
 client.pitch_speed(100,2)    #A pitch of 100 for 2 seconds
 client.throttle_speed(100,2) #A throttle of 100 for 2 seconds
 client.yaw_speed(100,2)      #A yaw of 100 for 2 seconds
+```
+
+To send all values at once 
+
+```
+# roll,pitch,throttle,yaw of value 100 each for 2 seconds
+client.set_all_speed(100,100,100,100,2)
+
 ```
 To reset the drone commands to the intial values, call
 ```python
@@ -59,10 +67,10 @@ The argument format is
 (roll, pitch, throttle, yaw)
 ```
 The sign of values should be opposite to which the drift is observed.<br>
-For Roll: right hand side is positive<br>
-For Pitch: forward positive<br>
-For Throttle: upwards is positive<br>
-For Yaw: Clockwise positive
+For Roll: right hand side -> positive<br>
+For Pitch: forward -> positive<br>
+For Throttle: upwards  -> positive<br>
+For Yaw: Clockwise -> positive
 
 ### For receiving data from the drone
 To receive data from the drone, the following functions can be called:
@@ -82,5 +90,3 @@ client.get_mag_x()      #Returns the value of magnetometer(x-axis) of the drone
 client.get_mag_y()      #Returns the value of magnetometer(y-axis) of the drone
 client.get_mag_z()      #Returns the value of magnetometer(z-axis) of the drone
 client.get_battery()    #Returns the value of battery of the drone in volts
-```
-
