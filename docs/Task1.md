@@ -39,17 +39,17 @@ client.flip()
 ### Steering the drone in a particular direction
 The drone can be steered in a particular direction by setting the values of throttle, pitch, roll and yaw. ( range of values is from : -600 to 600)
 ```python
-client.roll_speed(100,2)     #A roll of 100 for 2 seconds
-client.pitch_speed(100,2)    #A pitch of 100 for 2 seconds
-client.throttle_speed(100,2) #A throttle of 100 for 2 seconds
-client.yaw_speed(100,2)      #A yaw of 100 for 2 seconds
+client.roll_speed(100,duration=2)     #A roll of 100 for 2 seconds
+client.pitch_speed(100,duration=2)    #A pitch of 100 for 2 seconds
+client.throttle_speed(100,duration=2) #A throttle of 100 for 2 seconds
+client.yaw_speed(100,duration=2)      #A yaw of 100 for 2 seconds
 ```
 
 To send all values at once 
 
 ```python
 # roll,pitch,throttle,yaw of value 100 each for 2 seconds
-client.set_all_speed(100,100,100,100,2)
+client.set_all_speed(100,100,100,100,duration=2)
 
 ```
 To reset the drone commands to the intial values, call
