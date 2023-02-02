@@ -2,44 +2,17 @@ import cv2
 import numpy as np
 import math
 import time
-# from 
 
-CAMERA_HEIGHT = 1.9 #
 
-Aruco_ref_dist = 2.2 # may be same as camera ht if we use it that way
-Aruco_ht_pixels_grnd =0 #ht in pixels when aruco on ground( reference dist)
+CAMERA_HEIGHT = 1.9 
+
+Aruco_ref_dist = 2.2 # may be same as camera ht if we use it as a reference
+Aruco_ht_pixels_grnd =15 #ht in pixels when aruco on ground( reference dist)
 Aruco_width_pixels_grnd = 15 #wdth in pixels when aruco on ground( reference dist)
 Aruco_len_pixels_grnd = 15
 
-#new
-#matrix_coefficients - Intrinsic matrix of the calibrated camera
-# MATRIX_COEFFICIENTS = np.array([[
-#             464.8192469875138,
-#             0.0,
-#             330.94525650909304
-#         ],
-#         [
-#             0.0,
-#             468.11321340402986,
-#             219.95374647133153
-#         ],
-#         [
-#             0.0,
-#             0.0,
-#             1.0
-#         ]])
-
-# # #distortion_coefficients - Distortion coefficients associated with our camera
-# DISTORTION_COEFFICIENTS = np.array([
-#             -0.033875901439185716,
-#             0.029365508680956807,
-#             -0.0009132809734765359,
-#             0.004165081566793737,
-#             -0.0191803679654891])
- 
 
 
-#old
 #matrix_coefficients - Intrinsic matrix of the calibrated camera
 MATRIX_COEFFICIENTS = np.array([[
             1447.9804004365824,
@@ -222,8 +195,8 @@ def markerMainSender(connCam):  #connCam
 
     aruco_obj = Aruco("DICT_4X4_50")
 
-    prevdist = 0
-    alpha = 0.1
+
+   
     while cap.isOpened(): 
 
         ret, image = cap.read()               
