@@ -214,7 +214,7 @@ class Aruco:
 
 
 
-def markerMainSender(connCam):  #connCam
+def markerMainSender(connCam1, connCam2):  #connCam
 
     cameraID = 3 # your camera id on pc
     target_array = [
@@ -260,7 +260,8 @@ def markerMainSender(connCam):  #connCam
             cv2.imshow("Image", image)
         
         # print(f"\n{i}--From Marker - Pose: {pose}")
-        connCam.send(pose_dict)
+        # connCam1.send(pose_dict)
+        # connCam2.send(pose_dict)
         # print(pose_dict)
 
 

@@ -12,10 +12,12 @@ def build_conn():
 
     #creates connection btw marker1 file and drone1
     connCam,connDrone1 = Pipe(duplex = True)
+    connCam2, connDrone2 = Pipe(duplex=True)
 
 
-    p1 = multiprocessing.Process(target=markerMainSender, args=( [connCam]))
+    p1 = multiprocessing.Process(target=markerMainSender, args=( [connCam, connCam2]))
     p2 = multiprocessing.Process(target=receiver_at_drone1, args=([connDrone1]))
+    p3 = multiprocessing.Process(target=receiver_at_drone1, args=([connDrone2]))
 
 
 
