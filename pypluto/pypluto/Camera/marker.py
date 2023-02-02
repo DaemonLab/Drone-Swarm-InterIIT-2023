@@ -8,8 +8,8 @@ CAMERA_HEIGHT = 1.9 #
 
 Aruco_ref_dist = 2.2 # may be same as camera ht if we use it that way
 Aruco_ht_pixels_grnd =0 #ht in pixels when aruco on ground( reference dist)
-Aruco_width_pixels_grnd = 18 #wdth in pixels when aruco on ground( reference dist)
-Aruco_len_pixels_grnd = 18 
+Aruco_width_pixels_grnd = 15 #wdth in pixels when aruco on ground( reference dist)
+Aruco_len_pixels_grnd = 15
 
 #new
 #matrix_coefficients - Intrinsic matrix of the calibrated camera
@@ -98,10 +98,8 @@ class Aruco:
         self.arucoParams = cv2.aruco.DetectorParameters_create()
 
     def detectMarkers(self,img):
-        #don't we need to use a gray img here? remember to change inputs to gray_img
-        #gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        
         return cv2.aruco.detectMarkers(img, self.arucoDict, parameters=self.arucoParams)
-        #cornersm, ids, prejected_img_points
 
     def get_pose(self, corners, ids, image, desiredVec, display=True):
 
@@ -110,14 +108,10 @@ class Aruco:
         # print(f"corners, {corners} IDs: {ids}")
         
         if len(corners) > 0:
-            # print("detected")
             
             for (markerCorner, markerID) in zip(corners, ids):
-                # try:
+
                 rvec, tvec, markerPoints = cv2.aruco.estimatePoseSingleMarkers(np.array(corners), 0.02, cameraMatrix=MATRIX_COEFFICIENTS, distCoeffs=DISTORTION_COEFFICIENTS)
-                # except cv2.error:
-                #     print("Pose Est error")
-                #     return pose, is_detected, image
 
                 corners = markerCorner.reshape((4, 2))
                 (topLeft, topRight, bottomRight, bottomLeft) = corners
@@ -157,7 +151,8 @@ class Aruco:
 
                 distmax = round( max( max(dist_l1 , dist_l2 ) , max( dist_w1 , dist_w2) ) ,3  )
 
-             
+                if distmax < 0 :
+                    distmax = 0 
                 #------------------------------------
                 
  
@@ -182,32 +177,18 @@ class Aruco:
                     cv2.circle(image, (cX, cY), 4, (0, 0, 255), -1)
                     
                     cv2.arrowedLine(image, (cX,cY), (hX,hY),(0, 0, 255))
-                    
-                    # cv2.putText(image , f"width1{round(width1,3)} ,width2{round(width2,3)} , len1{round(len1,3)} , len2{round(len2,3)}",
-                    # (20, 200), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
                     cv2.putText(image , f"distmax:{distmax}  ",
                     (20, 400), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 2)
-                    
-                    # cv2.putText(image , f"Aruco Dist from Cam: w:{aruco_curr_width} l:{aruco_curr_len}",
-                    # (topLeft[0]+400, topLeft[1] -50 ), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-
-
-                    # cv2.putText(image , f"Aruco Dist from Cam: wdist:{dist_w} ldist:{dist_l} final:{dist_aruco}",
-                    # (topLeft[0]+400, topLeft[1] -50 ), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-                    # image = cv2.flip(image,1)
-                    # cv2.putText(image, f"Drone ID: {markerID} Height: {drone_height} ",
-                    # (topLeft[0]-20, topLeft[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-                    # cv2.putText(image, f"Pose: {pose}",
-                    # (topLeft[0]-400, topLeft[1] - 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-                    # print("[Inference] ArUco marker ID: {}".format(markerID))
             
         if display:
             for i in range(len(desiredVec[0])):
                 # print(desiredVec[0][i])
                 dX,dY = desiredVec[0][i]
                 cv2.circle(image, (dX, dY), 7, (255, 0, 0), -1)
-                    
+            # dX,dY = 646, 348
+            # cv2.circle(image, (dX, dY), 7, (255, 0, 0), -1)
+            cv2.imshow("Image", image)        
 
                 
         return pose, is_detected, image, 
@@ -216,19 +197,26 @@ class Aruco:
 
 def markerMainSender(connCam):  #connCam
 
-    cameraID = 3 # your camera id on pc
+    cameraID = 2 # your camera id on pc
     target_array = [
-    [914, 149],
-    [921, 422],
-    [365, 432],
     [375, 162],
-    [914, 149]   
+    [538, 160],
+    [652, 158],
+    [788, 152],
+    [914, 149],
+    [920, 240],
+    [922, 332],
+    [921, 422],
+    [776, 422],
+    [632, 428],
+    [486, 432],
+    [365, 432],
+    [365, 355],
+    [364, 248],
+    [375, 162],
 ]
-    target=0
-    xTarget,  yTarget = target_array[0]
-    cap = cv2.VideoCapture(cameraID)
-    start = time.time()
 
+    cap = cv2.VideoCapture(cameraID)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 
@@ -257,9 +245,10 @@ def markerMainSender(connCam):  #connCam
                 # print(desiredVec[0][i])
                 dX,dY = target_array[i]
                 cv2.circle(image, (dX, dY), 7, (255, 0, 0), -1)
+            # dX,dY = 646, 348
+            # cv2.circle(image, (dX, dY), 7, (255, 0, 0), -1)
             cv2.imshow("Image", image)
         
-        # print(f"\n{i}--From Marker - Pose: {pose}")
         connCam.send(pose_dict)
         # print(pose_dict)
 
@@ -270,6 +259,5 @@ def markerMainSender(connCam):  #connCam
 
     cv2.destroyAllWindows()
     cap.release()
-
 
 # markerMainSender(connCam='')

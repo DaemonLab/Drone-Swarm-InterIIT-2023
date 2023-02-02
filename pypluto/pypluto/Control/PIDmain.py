@@ -8,36 +8,52 @@ import time
 
 #Target coords
 target_array = [
-    [914, 149],
-    [921, 422],
-    [365, 432],
     [375, 162],
-    [914, 149]   
+    [538, 160],
+    [652, 158],
+    [788, 152],
+    [882, 175],
+    [920, 240],
+    [922, 332],
+    [886, 402],
+    [776, 422],
+    [632, 428],
+    [486, 432],
+    [402, 412],
+    [365, 355],
+    [364, 248],
+    [375, 162],
 ]
 target_array2=[]
 target_array2.append(target_array[0])
-# xTarget,  yTarget, heightTarget = target_array[0][0],target_array[0][1], 0.8  #pixel, pixel , height(m)
-xTarget,  yTarget, heightTarget = 693, 335, 0.8
-Drone1=pluto(DroneIP="10.42.0.74")
+xTarget,  yTarget, heightTarget = target_array[0][0],target_array[0][1], 0.8  #pixel, pixel , height(m)
+# xTarget,  yTarget, heightTarget = 646, 348, 0.8 # for hover at point
+# Drone1=pluto(DroneIP="10.42.0.74")
+Drone1=pluto()
 # Drone2=pluto(DroneIP="10.42.0.96")
 Drone1.connect()
 # Drone2.connect()
 # client = [Drone1,Drone2]
 drone=Drone1
+
+# #pid gains
+
+KPx, KPy, KPz, KPyaw = 0.8, 0.4, 380 , 50
+KIx, KIy, KIz, KIyaw = 0.02, 0.01, 0, 0
+KDx, KDy, KDz, KDyaw = 18, 25, 10, 0
+
 #pid gains
-KPx, KPy, KPz, KPyaw = 0.5, 0.1, 200 , 70
-KIx, KIy, KIz, KIyaw = 0.01, 0.01, 0, 0
-KDx, KDy, KDz, KDyaw = 5, 30, 0, 0
+# KPx, KPy, KPz, KPyaw = 0.75, 0.2, 380 , 50
+# KIx, KIy, KIz, KIyaw = 0.02, 0.01, 0, 0
+# KDx, KDy, KDz, KDyaw = 18, 27, 10, 0
 
 
 #currently global , 
 #for telling drones final yaw orientation 
 YAW_TARGET = 1.5708
 
-
-
 def pid(pose, target, Err, ErrI):
-    """
+    """drone.throttle_speed(0)
     PID Control Loop
     """
     xError, yError, zError, yawError = Err
@@ -106,20 +122,20 @@ def receiver_at_drone1(conn):
     ErrI = [xErrorI, yErrorI, zErrorI, yawErrorI]
     path = [[0,0,0,0]]
     
-    drone.trim(5, 0, 0, 0)
+    #Drone1.trim(-8,20,0,0) # iit
+    Drone1.trim(23, 5,0,0)
     Drone1.disarm()
-    # Drone2.disarm()
+    # Drone2.disarm
     # drone.arm()
-    # Drone1.arm()
+    Drone1.arm()
     # Drone2.arm()
-    # Drone1.throttle_speed(50,1)
+    Drone1.throttle_speed(300,2)
     # Drone2.throttle_speed(50,1)
-    Drone1.takeoff()
-    # drone.throttle_speed(300,3)
+    # Drone1.takeoff()
     print("takeoff")
 
-    timer=0
-    roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 0, 0
+    tReachCount=0
+    roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 50, 0
 
     start = time.time()
     target = 0
@@ -131,10 +147,7 @@ def receiver_at_drone1(conn):
 
 
         try:
-            # prev_time = time.time()
             pose_dict = None
-            # now = time.time()
-            # delay = now-start
 
             if (conn.poll()):                
                 pose_dict = conn.recv()
@@ -145,7 +158,7 @@ def receiver_at_drone1(conn):
                 now_time = time.time()
                 timeout_limit = now_time - start 
 
-                roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 0, 0
+                roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 50, 0
 
                 if timeout_limit > 8 : 
                     print("Aruco not detected ,landing")
@@ -156,29 +169,38 @@ def receiver_at_drone1(conn):
                 
           
             elif (not pose_dict)==False:
-                print('SGVADGV')
-                print(pose_dict)
+                # print(pose_dict)
                 if drone==Drone1:
-                    pose=pose_dict['0']
+                    try:
+                        pose=pose_dict['0']
+                    except KeyError:
+                        pass
                 # elif drone==Drone2:
                 #     pose=pose_dict['1']
                 # path.append(pose)
                 start = time.time()
-                # curr_time = time.time()
                 roll_command, pitch_command, throttle_command, yawCommand, Err, ErrI = pid(pose, [xTarget,  yTarget, heightTarget], Err, ErrI)
-                # print("pid calc successssssss...sending cammand")
                 if (roll_command>100):
                     roll_command=100
                 elif (roll_command<-100):
                     roll_command=-100
-                if (pitch_command>50):
-                    pitch_command=50
-                elif (pitch_command<-50):
-                    pitch_command=-50
+                if (pitch_command>70):
+                    pitch_command=70
+                elif (pitch_command<-70):
+                    pitch_command=-70
 
-                if np.sqrt((xTarget-pose[0])**2+(yTarget-pose[1])**2)<100:
-                    print(f"Pose: {pose}")
+                if np.sqrt((xTarget-pose[0])**2+(yTarget-pose[1])**2)<25:
+                    # print(f"Pose: {pose}")
                     print("Target Reached.")
+                    drone.reset_speed()
+                    tReachCount += 1
+                    if tReachCount>=5:
+                        target += 1
+                        if target==15:
+                            print("Task Completed\nLanding")
+                            break
+                        xTarget,  yTarget = target_array[target]
+                        tReachCount=0
 
                     # if drone==Drone1:
                     #     target_array2.append(target_array[0])
@@ -197,23 +219,13 @@ def receiver_at_drone1(conn):
                     #         xTarget,  yTarget = target_array[0]
                     #         continue
 
-                    
-                    # if target==5:
-                    #     print("Task Completed\nLanding")
-                    #     break
-                    # xTarget,  yTarget = target_array[target]
             # if drone==Drone1:
-            #     print("bheja2222222")
             #     Drone2.throttle_speed(40)
             # elif drone==Drone2:
-            #     print("bheja111111")
             #     Drone1.throttle_speed(40)
 
-            drone.throttle_speed(-5)
-            # print("bhejjaaa11111")
-            drone.roll_speed(roll_command)
-            drone.pitch_speed(pitch_command)
-            drone.yaw_speed(yawCommand)
+            drone.set_all_speed(roll_command, pitch_command, throttle_command, yawCommand)
+            # drone.set_all_speed(0, 0, throttle_command, 0)
 
             time.sleep(0.04)
             # prev_time = curr_time

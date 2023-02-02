@@ -205,6 +205,19 @@ class pluto:
          time.sleep(0.1)
         if(duration==0):
             self.create_sendMSPpacket(MSP_SET_RAW_RC,self.rc)
+
+    def set_all_speed(self,roll,pitch,throttle,yaw,duration=0):
+        no_of_loops=10*duration
+        self.rc[0]=self.clamp_rc(self.roll + roll)
+        self.rc[1]=self.clamp_rc(self.pitch + pitch)
+        self.rc[2]=self.clamp_rc(self.throttle + throttle)
+        self.rc[3]=self.clamp_rc(self.yaw + yaw)
+        while(no_of_loops>0):
+         self.create_sendMSPpacket(MSP_SET_RAW_RC,self.rc)
+         no_of_loops=no_of_loops-1
+         time.sleep(0.1)
+        if(duration==0):
+            self.create_sendMSPpacket(MSP_SET_RAW_RC,self.rc)
            
     def reset_speed(self):
         '''
