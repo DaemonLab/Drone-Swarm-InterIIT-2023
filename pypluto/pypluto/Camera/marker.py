@@ -1,13 +1,12 @@
 import cv2
 import numpy as np
 
-CAMERA_HEIGHT = 1.9 #
+CAMERA_HEIGHT = 1.9 
 
-Aruco_ref_dist = 2.2 # may be same as camera ht if we use it that way
-Aruco_ht_pixels_grnd =0 #ht in pixels when aruco on ground( reference dist)
+Aruco_ref_dist = 2.2 # may be same as camera ht if we use it as a reference
+Aruco_ht_pixels_grnd =15 #ht in pixels when aruco on ground( reference dist)
 Aruco_width_pixels_grnd = 15 #wdth in pixels when aruco on ground( reference dist)
 Aruco_len_pixels_grnd = 15
-
 
 #matrix_coefficients - Intrinsic matrix of the calibrated camera
 MATRIX_COEFFICIENTS = np.array([[

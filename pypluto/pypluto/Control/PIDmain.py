@@ -40,7 +40,7 @@ KDx, KDy, KDz, KDyaw = 18, 25, 10, 0
 
 
 #currently global , 
-#for telling drones final yaw orientation 
+#for deciding drone's final yaw orientation 
 YAW_TARGET = 1.5708
 
 def pid(pose, target, Err, ErrI):
