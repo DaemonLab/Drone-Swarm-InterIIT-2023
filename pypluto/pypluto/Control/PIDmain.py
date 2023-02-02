@@ -1,6 +1,3 @@
-'''This file Receives pose values from marker.py ,&
- computes the velocity commands for drone, sends them using drone.pyto='s plu'''
-
 from multiprocessing import Pipe
 from pypluto.drone import pluto
 import numpy as np
@@ -27,25 +24,18 @@ target_array = [
 target_array2=[]
 target_array2.append(target_array[0])
 xTarget,  yTarget, heightTarget = target_array[0][0],target_array[0][1], 0.8  #pixel, pixel , height(m)
-# xTarget,  yTarget, heightTarget = 646, 348, 0.8 # for hover at point
-# Drone1=pluto(DroneIP="10.42.0.74")
+
 Drone1=pluto()
-# Drone2=pluto(DroneIP="10.42.0.96")
+
 Drone1.connect()
-# Drone2.connect()
-# client = [Drone1,Drone2]
+
 drone=Drone1
 
-# #pid gains
+#pid gains
 
 KPx, KPy, KPz, KPyaw = 0.8, 0.4, 380 , 50
 KIx, KIy, KIz, KIyaw = 0.02, 0.01, 0, 0
 KDx, KDy, KDz, KDyaw = 18, 25, 10, 0
-
-#pid gains
-# KPx, KPy, KPz, KPyaw = 0.75, 0.2, 380 , 50
-# KIx, KIy, KIz, KIyaw = 0.02, 0.01, 0, 0
-# KDx, KDy, KDz, KDyaw = 18, 27, 10, 0
 
 
 #currently global , 
@@ -53,7 +43,7 @@ KDx, KDy, KDz, KDyaw = 18, 25, 10, 0
 YAW_TARGET = 1.5708
 
 def pid(pose, target, Err, ErrI):
-    """drone.throttle_speed(0)
+    """
     PID Control Loop
     """
     xError, yError, zError, yawError = Err
@@ -110,7 +100,7 @@ def receiver_at_drone1(conn):
     as soon as we recieve them
     """
     global xTarget,  yTarget, heightTarget, drone
-    #drone=pluto()
+    
 
     # initialize PID controller
     xError, yError, zError, yawError = 0, 0, 0, 0
@@ -135,6 +125,7 @@ def receiver_at_drone1(conn):
     print("takeoff")
 
     tReachCount=0
+    # default values when not detected
     roll_command, pitch_command, throttle_command, yawCommand = 0, 0, 50, 0
 
     start = time.time()
@@ -164,22 +155,19 @@ def receiver_at_drone1(conn):
                     print("Aruco not detected ,landing")
                     drone.land()
                     break
-
-                # print(f"\ntimer :{timeout_limit}")
                 
           
             elif (not pose_dict)==False:
-                # print(pose_dict)
                 if drone==Drone1:
                     try:
                         pose=pose_dict['0']
                     except KeyError:
                         pass
-                # elif drone==Drone2:
-                #     pose=pose_dict['1']
-                # path.append(pose)
+
                 start = time.time()
                 roll_command, pitch_command, throttle_command, yawCommand, Err, ErrI = pid(pose, [xTarget,  yTarget, heightTarget], Err, ErrI)
+                
+                # Clipping commands
                 if (roll_command>100):
                     roll_command=100
                 elif (roll_command<-100):
@@ -202,38 +190,19 @@ def receiver_at_drone1(conn):
                         xTarget,  yTarget = target_array[target]
                         tReachCount=0
 
-                    # if drone==Drone1:
-                    #     target_array2.append(target_array[0])
-                    #     target_array.pop(0)
-                    #     drone=Drone2
-                    #     if len(target_array)>1:
-                    #         xTarget,  yTarget = target_array2[0]
-                    #     # if not target_array:
-                    #     #         drone.land()
-                    # else:
-                    #     target_array2.pop(0)
-                    #     drone=Drone1
-                    #     if not target_array2:
-                    #         break
-                    #     elif target_array:
-                    #         xTarget,  yTarget = target_array[0]
-                    #         continue
-
-            # if drone==Drone1:
-            #     Drone2.throttle_speed(40)
-            # elif drone==Drone2:
-            #     Drone1.throttle_speed(40)
-
+   
+            # Set all speeds at once
             drone.set_all_speed(roll_command, pitch_command, throttle_command, yawCommand)
-            # drone.set_all_speed(0, 0, throttle_command, 0)
+            
 
             time.sleep(0.04)
-            # prev_time = curr_time
+       
             '''this sleep adjusts the running of this files while loop, 
             so that the rate of receiving from marker files is almost matched 
             to that of this file sending commands to drone using api '''
+            
+            
             if not roll_command==0:
-
                 print(f"\nFrequecy checker(sending) , rcmd: {roll_command}, pcmd: {pitch_command}, tcmd:{throttle_command},  yawcmd:{yawCommand}")
 
         except KeyboardInterrupt:
@@ -243,5 +212,4 @@ def receiver_at_drone1(conn):
 
     Drone1.land()
     Drone1.disarm()
-    # Drone2.land()
-    # Drone2.disarm()
+   
