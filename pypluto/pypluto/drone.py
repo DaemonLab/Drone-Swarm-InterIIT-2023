@@ -122,7 +122,7 @@ class pluto:
                 # no last command means we should exit thread
                 print("Leaving thread")
                 break
-            time.sleep(1) # delay between continuous commands being sent
+            time.sleep(0.1) # delay between continuous commands being sent
         pass
    
 
@@ -163,6 +163,12 @@ class pluto:
         '''
         self.rc[2]=1500
         self.rc[-1]=1500
+
+        self.thread_active = True
+
+        self.cSendThread = threading.Thread(target=self.cSendVals, args=(1,))
+        self.cSendThread.start()
+        
         self.create_sendMSPpacket(MSP_SET_RAW_RC,self.rc)
         time.sleep(0.5)
        
