@@ -225,4 +225,3 @@ def marker_publisher(connCam):  #connCam
 
 if __name__ == "__main__":
     marker_publisher(connCam='')
-    pass
