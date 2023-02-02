@@ -22,6 +22,8 @@ target_array = [
     [375, 162],
 ]
 
+# xTarget,  yTarget, heightTarget = 646, 348, 0.8 # for hover at point
+
 target_array2=[]
 target_array2.append(target_array[0])
 x_target,  y_target, height_target = target_array[0][0],target_array[0][1], 0.8  #pixel, pixel , height(m)

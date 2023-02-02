@@ -224,5 +224,5 @@ def marker_publisher(connCam):  #connCam
     cap.release()
 
 if __name__ == "__main__":
-    # marker_publisher(connCam='')
+    marker_publisher(connCam='')
     pass
