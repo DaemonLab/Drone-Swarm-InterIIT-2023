@@ -31,17 +31,17 @@ target_array = [
 
 x_target,  y_target, height_target = target_array[0][0],target_array[0][1], 0.8  #pixel, pixel , height(m)
 
-Drone1=pluto("") ###################### Change here
-Drone2=pluto("")
+Drone1=pluto("10.42.0.74") ###################### Change here
+Drone2=pluto("192.168.4.1")
 
-Drone1.connect()
+# Drone1.connect()
 Drone2.connect()
 
 
 
 drones_dict = {
-    '0': Drone1,
-    '8': Drone2
+    '8': Drone1,
+    '0': Drone2
 }
 
 #pid gains
@@ -128,7 +128,7 @@ def Drone_main(conn, DroneID):
     Drone = drones_dict[DroneID]
     
     #Drone1.trim(-8,20,0,0) # iit
-    Drone.trim(23, 5,0,0)
+    # Drone.trim(-12,-7,0,0)
     Drone.disarm()
     # Drone2.disarm
     # drone.arm()
@@ -137,7 +137,8 @@ def Drone_main(conn, DroneID):
     Drone.throttle_speed(300,2)
     # Drone2.throttle_speed(50,1)
     # Drone1.takeoff()
-    print("takeoff")
+    print(f"takeoff {DroneID}")
+    time.sleep(3)
 
     tReachCount=0
     # default values when not detected
@@ -148,7 +149,7 @@ def Drone_main(conn, DroneID):
 
     roll_log = []
     pitch_log = []
-    """
+
     while True:
 
 
@@ -168,16 +169,16 @@ def Drone_main(conn, DroneID):
 
                 if timeout_limit > 8 : 
                     print("Aruco not detected ,landing")
-                    drone.land()
+                    Drone.land()
                     break
                 
         
             elif (not pose_dict)==False:
-                if drone==Drone:
-                    try:
-                        pose=pose_dict['0']
-                    except KeyError:
-                        pass
+                # if drone==Drone:
+                try:
+                    pose=pose_dict['0']
+                except KeyError:
+                    pass
 
                 start = time.time()
                 roll_command, pitch_command, throttle_command, yaw_command, Err, ErrI = pid(pose, [x_target,  y_target, height_target], Err, ErrI)
@@ -195,7 +196,7 @@ def Drone_main(conn, DroneID):
                 if np.sqrt((x_target-pose[0])**2+(y_target-pose[1])**2)<25:
                     # print(f"Pose: {pose}")
                     print("Target Reached.")
-                    drone.reset_speed()
+                    Drone.reset_speed()
                     tReachCount += 1
                     if tReachCount>=5:
                         target += 1
@@ -207,8 +208,8 @@ def Drone_main(conn, DroneID):
 
 
             # Set all speeds at once
-            # drone.set_all_speed(roll_command, pitch_command, throttle_command, yaw_command)
-            drone.set_all_speed(0, 0, 0, 0)
+            Drone.set_all_speed(roll_command, pitch_command, throttle_command, yaw_command)
+            # Drone.set_all_speed(0, 0, 0, 0)
             
 
             time.sleep(0.04)
@@ -226,16 +227,18 @@ def Drone_main(conn, DroneID):
 
 
 
-    Drone1.land()
-    Drone1.disarm()
-    """
+    Drone.land()
+
+    Drone.disarm()
 
 
 def PID_main(conn):
-    drone = partial(Drone_main, conn=conn)
+    # drone = partial(Drone_main, conn=conn)
 
-    drone_pid1 = threading.Thread(target=drone, args=('0',))
-    drone_pid2 = threading.Thread(target=drone, args=('8',))
+    # drone_pid1 = threading.Thread(target=Drone_main, args=(conn, '0',))
+    drone_pid2 = threading.Thread(target=Drone_main, args=(conn, '0',))
 
-    drone_pid1.start()
+    # drone_pid1.start()
     drone_pid2.start()
+    # drone_pid1.join()
+    # drone_pid2.join()

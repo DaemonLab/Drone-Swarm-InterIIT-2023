@@ -2,11 +2,11 @@
 from pypluto import pluto
 import time
  
-drone1=pluto()
+drone1=pluto("192.168.4.1")
  
 drone1.connect()
 
-drone1.trim(-10,10,0,0)
+drone1.trim(-15,-7,0,0)
 drone1.disarm()
 
 drone1.takeoff()
