@@ -2,7 +2,7 @@ import matplotlib
 import multiprocessing
 from multiprocessing import Pipe
 import time 
-from pypluto.Control.task3 import PID_main
+from pypluto.Control.task3new import PID_main
 from pypluto.Camera.marker import marker_publisher
 
 
@@ -12,10 +12,14 @@ def build_conn():
 
     #creates connection btw marker1 file and drone1
     connCam,connDrone1 = Pipe(duplex = True)
+    q = multiprocessing.Queue()
+
+    p1 = multiprocessing.Process(target=marker_publisher, args=( [q]))
+    p2 = multiprocessing.Process(target=PID_main, args=( [q]))
 
 
-    p1 = multiprocessing.Process(target=marker_publisher, args=( [connCam]))
-    p2 = multiprocessing.Process(target=PID_main, args=([connDrone1]))
+    # p1 = multiprocessing.Process(target=marker_publisher, args=( [connCam]))
+    # p2 = multiprocessing.Process(target=PID_main, args=([connDrone1]))
 
 
 
