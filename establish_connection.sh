@@ -7,12 +7,11 @@ send "telnet $ip\r"
 expect "'^]'."
 send "+++AT MODE 3\r"
 expect "#"
-sleep 1
+sleep 0.5
 
-send "+++AT STA jammy yeeshukant\r"
+send "+++AT STA HawkAI blinkna123\r"
 expect "#"
 
-sleep 1
 send -- "^]\r"
 expect "telnet>"
 send  "quit\r"

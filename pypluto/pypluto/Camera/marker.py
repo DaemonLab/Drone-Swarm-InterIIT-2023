@@ -1,3 +1,4 @@
+import time 
 import cv2
 import numpy as np
 
@@ -79,7 +80,8 @@ class Aruco:
             
             for (markerCorner, markerID) in zip(corners, ids):
 
-                rvec, tvec, markerPoints = cv2.aruco.estimatePoseSingleMarkers(np.array(corners), 0.02, cameraMatrix=MATRIX_COEFFICIENTS, distCoeffs=DISTORTION_COEFFICIENTS)
+
+                # rvec, tvec, markerPoints = cv2.aruco.estimatePoseSingleMarkers(np.array(corners), 0.02, cameraMatrix=MATRIX_COEFFICIENTS, distCoeffs=DISTORTION_COEFFICIENTS)
 
                 corners = markerCorner.reshape((4, 2))
                 (topLeft, topRight, bottomRight, bottomLeft) = corners
@@ -131,9 +133,9 @@ class Aruco:
 
 
                     
-                drone_height = CAMERA_HEIGHT - tvec[0,0,2]
+                # drone_height = CAMERA_HEIGHT - tvec[0,0,2]
 
-                pose = np.array([cX,cY, drone_height,yaw]) 
+                pose = np.array([cX,cY, distmax,yaw]) 
                 is_detected = True
                 if display:
                     cv2.line(image, topLeft, topRight, (0, 255, 0), 2)
@@ -160,66 +162,55 @@ class Aruco:
                 
         return pose, is_detected, image, 
 
+def marker_publisher(connCam, connCam2):  #connCam
 
-
-def marker_publisher(connCam):  #connCam
+    # print('\n-------Starting process Camera-------')
+    # time.sleep(2)
 
     cameraID = 2 # your camera id on pc
-#     target_array = [
-#     [375, 162],
-#     [538, 160],
-#     [652, 158],
-#     [788, 152],
-#     [914, 149],
-#     [920, 240],
-#     [922, 332],
-#     [921, 422],
-#     [776, 422],
-#     [632, 428],
-#     [486, 432],
-#     [365, 432],
-#     [365, 355],
-#     [364, 248],
-#     [375, 162],
-# ]
     target_array = [
-        [375, 162], ## 1 corner
-        [538, 160],
-        [652, 158],
-        [788, 152],
-        [882, 175], ## 2 corner
-        [920, 240],
-        [922, 332],
-        [886, 402], ## 3 corner
-        [776, 422],
-        [632, 428],
-        [486, 432],
-        [402, 412], ## 4 corner
-        [365, 355],
-        [364, 248],
-        [375, 162], ## 1 corner
-    ]
+    [375, 162],
+    [538, 160],
+    [652, 158],
+    [788, 152],
+    [914, 149],
+    [920, 240],
+    [922, 332],
+    [921, 422],
+    [776, 422],
+    [632, 428],
+    [486, 432],
+    [365, 432],
+    [365, 355],
+    [364, 248],
+    [375, 162],
+]
 
     cap = cv2.VideoCapture(cameraID)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 
     aruco_obj = Aruco("DICT_4X4_50")
-
+    # nowtime=time.time()
     while cap.isOpened(): 
-
+        # prevtime=nowtime
         ret, image = cap.read()               
         
         #Aruco Detection , pose Estimation Block
 
         pose_dict={}
         corners, ids, rejected = aruco_obj.detectMarkers(image)
- 
+        # print(ids)
+
+        
+
         if len(corners)>0:
             for i in range(0,len(ids)):
                 pose, is_detected, detected_markers  = aruco_obj.get_pose(corners[i], ids, image, [target_array], display=True)
                 cv2.imshow("Image", detected_markers)
                 pose_dict[str(ids[i][0])]=pose
+
+                
 
         else:
             for i in range(len(target_array)):
@@ -229,10 +220,13 @@ def marker_publisher(connCam):  #connCam
 
             cv2.imshow("Image", image)
         
-        connCam.put(pose_dict)
 
-        print("###########",connCam.qsize())
-
+        
+        # print(pose_dict)
+        # connCam.send(pose_dict)
+        # connCam2.send(pose_dict)
+        # nowtime=time.time()
+        # print((nowtime-prevtime))
 
 
         key = cv2.waitKey(1) & 0xFF
@@ -243,4 +237,5 @@ def marker_publisher(connCam):  #connCam
     cap.release()
 
 if __name__ == "__main__":
-    marker_publisher(connCam='')
+    # pass
+    marker_publisher(connCam='',connCam2='')
