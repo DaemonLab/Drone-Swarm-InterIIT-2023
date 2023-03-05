@@ -1,8 +1,12 @@
-
-
 <div id="top"></div>
 
 # Drone Swarm Python
+## Inter-IIT Tech Meet 11.0: Bronze medal winning solution to [Drona Aviation](https://github.com/DronaAviation)'s Pluto Drone Swarm Challenge
+
+Team Members: [Yeeshukant Singh](https://github.com/Yeeshukant), [Kshitij Bhat](https://github.com/KshitijBhat), [Harsh Bardhan](https://github.com/harshahb), [Rohan Jha](https://github.com/rohanjha04), [Sairaj Loke](https://github.com/SairajLoke), [Akshit Raizada](https://github.com/AkshitRaizada), [Omkar Shirgaonkar](https://github.com/BulzEye), [Shivankar Sharma](https://github.com/Shivankar007)
+
+Original Repo: https://github.com/DaemonLab/Drone-Swarm-InterIIT-2023
+
 API for controlling The Pluto 1.2 nano drone
 
 ![Pluto1 2-ISO-Front](https://user-images.githubusercontent.com/79806119/214293414-403e11c9-3395-4ed4-a8a5-4aa190e86979.png)
@@ -13,7 +17,6 @@ API for controlling The Pluto 1.2 nano drone
 
 
 ## Table of Contents
- 
  
 
  <p><a href="#ProjD">1. Project Description</a></p>
@@ -36,7 +39,7 @@ API for controlling The Pluto 1.2 nano drone
 -  d. Manually stopping (killing) the drone
 
 
-<p><a href="#Demo">6. Demo</a></p>
+<p><a href="#Video">6. Video</a></p>
 
 
  
@@ -165,7 +168,7 @@ Now at last we just need to activate it, using the command
 ```
 $ source Drone_Env/bin/activate
 ```
-Now you are in a Drone's Python virtual environment , follow the <a href="#setupLinux">following cmds</a> for installation of packages
+Now you are in a Drone's Python virtual environment , follow the <a href="#SetU">following cmds</a> for installation of packages
 
 Note:
 You can deactivate environment using
@@ -180,7 +183,7 @@ $ deactivate
 ## Setting up pypluto package in Linux
 
 ```
-$ git clone https://github.com/DaemonLab/Drone-Swarm/edit/Drone_Swarm_Task_1/
+$ git clone https://github.com/team53-interiit-11/Drona-Aviation-Team53
 $ cd pypluto
 ```
 Install the External Dependencies using the following command 
@@ -206,7 +209,7 @@ python /path/to/get-pip.py
 ```
  Run the following commands:
 ```
-$ git clone https://github.com/DaemonLab/Drone-Swarm/edit/Drone_Swarm_Task_1/
+$ git clone https://github.com/team53-interiit-11/Drona-Aviation-Team53
 $ cd pypluto
 ```
 
@@ -250,31 +253,34 @@ if __name__ == '__main__':
 
 ```
 
-For detailed explanation of use of various movement functions, refer to [Task1.md](https://github.com/DaemonLab/Drone-Swarm/blob/Drone_Swarm_Task_1/docs/Task1.md) <br>
+For detailed explanation of use of various movement functions, refer to [Task1.md](/docs/Task1.md) <br>
 
 #### b. Camera Feedback Execution
 
 Instructions for controlling the drone using camera setup can be found in the
-[task2.md](https://github.com/DaemonLab/Drone-Swarm/blob/Drone_Swarm_Task_1/docs/task2.md)
+[Task2.md](/docs/Task2.md)
 
 
 #### c. Keyboard Control
 
 User can also control the drone from keyboard by running the ```keyboard.py``` file in terminal/command prompt. 
-Instructions for control via keyboard can be found in [keyboard_control.md](https://github.com/DaemonLab/Drone-Swarm/blob/Drone_Swarm_Task_1/docs/keyboard_control.md)
+Instructions for control via keyboard can be found in [keyboard_control.md](/docs/keyboard_control.md)
 
 
 ### d. Manually stopping (killing) the drone
 
 In case the drone does not arm after running ```main.py```, which may happen due to improper disarming of the drone, you can run ```kill.py``` instead of disconnecting the drone to disarm it properly and then run ```main.py``` to get regular operation
 
-<div id="Demo"></div>
+<div id="Video"></div>
 
-## Demo
+#### 6. Video
 
-Link to Drive : 
+Link to Drive : https://drive.google.com/file/d/1zlupXXNTnhAbURaeVlbYnx64emY9gVFm/view?usp=sharing
+
+Hover Task: 0:00 to 0:32
+
+Control Task: 0:33 to 1:39
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <div id="RoadM"></div>
-
